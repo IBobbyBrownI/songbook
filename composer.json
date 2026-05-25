@@ -1,0 +1,6 @@
+{
+    "require": {
+        "symfony/http-foundation": "^8.0",
+        "symfony/dotenv": "^8.0"
+    }
+}
