@@ -1,10 +1,10 @@
 # Songbook
 
 1. Как запустить с нуля
-* Клонировать репозиторий: "git clone https://github.com/IBobbyBrownI/songbook.git"
-* Скачать все библиотеки и компоненты: "composer install"
-* Запустить локальный сервер: "php -S localhost:8000 -t public/"
-* Открыть в браузере: localhost:8000
+* Клонировать репозиторий: "git clone https://github.com/IBobbyBrownI/songbook.git";
+* Создать файл .env в корне, копировать содержимое .env.example, указать сови DB_USER и DB_PASSWORD;
+* Запустить контейнеры: "docker compose up -d --build";
+* Открыть в браузере: localhost:8000.
 
 
 
@@ -24,5 +24,5 @@
 5. Что бы сделал иначе / что осталось недоделанным
 * 
 6. Реально потраченные часы
-* 4.2 h
+* 7.9 h (на момент записи)
 
