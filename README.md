@@ -4,6 +4,8 @@
     * Клонировать репозиторий: "git clone https://github.com/IBobbyBrownI/songbook.git";
     * Создать файл .env в корне, копировать содержимое .env.example, указать сови DB_USER и DB_PASSWORD;
     * Запустить контейнеры: "docker compose up -d --build";
+    * Подождать пока MySQL полностью запустится (секунд 20 на всякий случай)
+    * Применить миграции: "for f in migrations/*.sql; do docker exec -i songbook-databse-1 mysql -u root -psecret songbook < "$f"; done";
     * Открыть в браузере: localhost:8000.
 
 
@@ -88,5 +90,5 @@
 
 
 7. Реально потраченные часы
-    * 16.3 h (на момент записи)
+    * 18.2 h (на момент записи)
 
