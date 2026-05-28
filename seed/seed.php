@@ -63,7 +63,7 @@ $songs = [
     [
         'title' => 'Count em',
         'artist_name' => 'Brandon Lake',
-        'lyrics_chordpro' => '[Cm]You got thunder in Your vocal You got flames in Your [Cm] eyes',
+        'lyrics_chordpro' => '{title: Count em}\n{key: C}\n\n{c: verse 1}\n[Cm]You got thunder in Your vocal You got flames in Your [Cm] eyes',
         'first_lyrics_line' => 'You got thunder in Your vocal You got flames in Your eyes',
         'key_original' => 'C',
         'license' => 'ugc',
@@ -76,7 +76,7 @@ $songs = [
     [
         'title' => 'Amazing grace',
         'artist_name' => 'Vladik Krivobrodski',
-        'lyrics_chordpro' => '[D]Amazing [D7]grace how s[G]weet the so[D]und',
+        'lyrics_chordpro' => '{title: Amazing grace}\n{key: D}\n\n{c: verse 1}\n[D]Amazing [D7]grace how s[G]weet the so[D]und',
         'first_lyrics_line' => 'Amazing grace how sweet the sound',
         'key_original' => 'D',
         'license' => 'ugc',
@@ -89,7 +89,7 @@ $songs = [
     [
         'title' => 'Hevens praise',
         'artist_name' => 'Vladik Krivobrodski',
-        'lyrics_chordpro' => 'The heavens praise Go[G]d t[A]o Y[Hm]ou, endlessly repe[G]ati[A]ng "Pr[Hm]aise"',
+        'lyrics_chordpro' => '{title: Hevens praise}\n{key: A}\n\n{c: verse 1}\nThe heavens praise Go[G]d t[A]o Y[Hm]ou, endlessly repe[G]ati[A]ng "Pr[Hm]aise"',
         'first_lyrics_line' => 'The heavens praise God to You, endlessly repeating Praise',
         'key_original' => 'A',
         'license' => 'ugc',
@@ -102,7 +102,7 @@ $songs = [
     [
         'title' => 'Praise',
         'artist_name' => 'Brandon Lake',
-        'lyrics_chordpro' => '[F#m]Pra-[D]ise the [A]Lord oh my[E] soul',
+        'lyrics_chordpro' => '{title: Praise}\n{key: A}\n\n{c: verse 1}\n[F#m]Pra-[D]ise the [A]Lord oh my[E] soul',
         'first_lyrics_line' => 'Praise the Lord oh my soul',
         'key_original' => 'A',
         'license' => 'ugc',
@@ -130,7 +130,6 @@ foreach ($songs as $song) {
     echo "Song: {$song['title']} (slug: $slug, key: {$song['key_original']}, license: {$song['license']})\n";
 }
 
-// === СВЯЗИ ===
 $linkStmt = $pdo->prepare('INSERT INTO song_artists (song_id, artist_id, role) VALUES (?, ?, ?)');
 
 foreach ($songs as $song) {
