@@ -1,0 +1,52 @@
+/* ChordPro — рендер аккордов над текстом */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.chordpro-line {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    line-height: 2.2;
+}
+
+.chord-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 4px;
+}
+
+.chord {
+    font-weight: bold;
+    color: #2563eb;
+    font-size: 0.85em;
+    font-family: "Courier New", monospace;
+    white-space: pre;
+}
+
+.text {
+    font-family: system-ui, sans-serif;
+}
+
+.chordpro-comment {
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    color: #374151;
+}
+
+.chordpro-blank {
+    height: 16px;
+}
