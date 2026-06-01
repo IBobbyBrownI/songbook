@@ -77,4 +77,31 @@ class SongController
 
         return new Response($html);
     }
+
+    public function new(Request $request): Response
+    {
+        $stmt = $this->pdo->query('SELECT id, name, slug FROM artists ORDER BY name');
+        $allArtists = $stmt->fetchAll();
+
+        $keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B',
+            'Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'];
+
+        $song = [
+            'title' => '',
+            'lyrics_chordpro' => '',
+            'key_original' => 'C',
+            'license' => 'unknown',
+        ];
+
+        $html = $this->twig->render('songs/form.html.twig', [
+            'mode' => 'new',
+            'song' => $song,
+            'all_artists' => $allArtists,
+            'selected_artists' => [],
+            'keys' => $keys,
+            'errors' => [],
+        ]);
+
+        return new Response($html);
+    }
 }

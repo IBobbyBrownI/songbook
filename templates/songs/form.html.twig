@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if mode == 'edit' %}Редактировать — {{ song.title }}{% else %}Новая песня{% endif %} — Песенник
+{% endblock %}
+
+{% block content %}
+    <h1>{% if mode == 'edit' %}Редактировать: {{ song.title }}{% else %}Новая песня{% endif %}</h1>
+
+    <form method="POST"
+          action="{% if mode == 'edit' %}/songs/{{ song.slug }}/update{% else %}/songs{% endif %}"
+          class="song-form">
+
+        {# Title #}
+        <div class="form-group">
+            <label for="title">Название</label>
+            <input type="text" id="title" name="title"
+                   value="{{ song.title }}"
+                   maxlength="255" required>
+            {% if errors.title %}
+                <span class="form-error">{{ errors.title }}</span>
+            {% endif %}
+        </div>
+
+        {# Lyrics ChordPro #}
+        <div class="form-group">
+            <label for="lyrics_chordpro">Текст песни (ChordPro)</label>
+            <textarea id="lyrics_chordpro" name="lyrics_chordpro" rows="12" required
+                      placeholder="[C]Привет [G]мир">{{ song.lyrics_chordpro }}</textarea>
+            {% if errors.lyrics_chordpro %}
+                <span class="form-error">{{ errors.lyrics_chordpro }}</span>
+            {% endif %}
+        </div>
+
+        {# Key original #}
+        <div class="form-group">
+            <label for="key_original">Тональность</label>
+            <select id="key_original" name="key_original">
+                {% for key in keys %}
+                    <option value="{{ key }}"
+                            {% if song.key_original == key %}selected{% endif %}>
+                        {{ key }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% if errors.key_original %}
+                <span class="form-error">{{ errors.key_original }}</span>
+            {% endif %}
+        </div>
+
+        {# License #}
+        <div class="form-group">
+            <label for="license">Лицензия</label>
+            <select id="license" name="license">
+                <option value="unknown" {% if song.license == 'unknown' %}selected{% endif %}>Не указана</option>
+                <option value="public_domain" {% if song.license == 'public_domain' %}selected{% endif %}>Общественный гимн</option>
+                <option value="ugc" {% if song.license == 'ugc' %}selected{% endif %}>Пользовательский контент</option>
+                <option value="restricted" {% if song.license == 'restricted' %}selected{% endif %}>Ограниченная</option>
+            </select>
+            {% if errors.license %}
+                <span class="form-error">{{ errors.license }}</span>
+            {% endif %}
+        </div>
+
+        {# Artists #}
+        <fieldset>
+            <legend>Артисты</legend>
+            {% if all_artists is empty %}
+                <p>Нет доступных артистов.</p>
+            {% else %}
+                <div class="artists-grid">
+                    {% for artist in all_artists %}
+                        <div class="artist-row">
+                            <label>
+                                <input type="checkbox" name="artists[{{ artist.id }}][id]"
+                                       value="{{ artist.id }}"
+                                       {% if artist.id in selected_artists|keys %}checked{% endif %}>
+                                {{ artist.name }}
+                            </label>
+                            <select name="artists[{{ artist.id }}][role]">
+                                <option value="author"
+                                        {% if selected_artists[artist.id]|default('') == 'author' %}selected{% endif %}>
+                                    Автор
+                                </option>
+                                <option value="composer"
+                                        {% if selected_artists[artist.id]|default('') == 'composer' %}selected{% endif %}>
+                                    Композитор
+                                </option>
+                                <option value="translator"
+                                        {% if selected_artists[artist.id]|default('') == 'translator' %}selected{% endif %}>
+                                    Переводчик
+                                </option>
+                                <option value="performer" selected>
+                                    Исполнитель
+                                </option>
+                            </select>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if errors.artists %}
+                <span class="form-error">{{ errors.artists }}</span>
+            {% endif %}
+        </fieldset>
+
+        <button type="submit">
+            {% if mode == 'edit' %}Сохранить{% else %}Создать{% endif %}
+        </button>
+    </form>
+{% endblock %}
