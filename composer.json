@@ -3,7 +3,9 @@
         "symfony/http-foundation": "^8.0",
         "symfony/dotenv": "^8.0",
         "ext-pdo": "*",
-        "cocur/slugify": "^4.7"
+        "cocur/slugify": "^4.7",
+        "symfony/routing": "^8.1",
+        "twig/twig": "^3.27"
     },
     "autoload": {
         "psr-4": {

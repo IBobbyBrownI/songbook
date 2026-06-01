@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Песенник{% endblock %}
+
+{% block content %}
+    <h1>Песни</h1>
+
+    {% if songs is empty %}
+        <p>Нет песен</p>
+    {% else %}
+        <ul class="song-list">
+            {% for song in songs %}
+                <li>
+                    <a href="/songs/{{ song.slug }}">{{ song.title }}</a>
+                    <span class="song-meta">
+                        {% if song.first_artist_name %}
+                            {{ song.first_artist_name }}
+                        {% endif %}
+                        {% if song.key_original %}
+                            — {{ song.key_original }}
+                        {% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

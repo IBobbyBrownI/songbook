@@ -3,6 +3,18 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use App\Controller\SongController;
+use App\ChordPro\Parser;
+use App\ChordPro\Renderer;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . "/../.env");
@@ -23,7 +35,36 @@ $pdo = new PDO
     ]
 );
 
-$stmt = $pdo->query("SELECT NOW()");
-var_dump($stmt->fetch());
 
-echo "Hello songbook!";
+$loader = new FilesystemLoader(__DIR__ . '/../templates');
+$twig = new Environment($loader);
+
+
+$parser = new Parser();
+$renderer = new Renderer();
+
+
+$songController = new SongController($pdo, $twig, $parser, $renderer);
+
+
+$routes = new RouteCollection();
+$routes->add('songs_list', new Route('/', ['_controller' => 'SongController', '_method' => 'list']));
+$routes->add('songs_show', new Route('/songs/{slug}', ['_controller' => 'SongController', '_method' => 'show']));
+
+
+$request = Request::createFromGlobals();
+$context = new RequestContext();
+$context->fromRequest($request);
+$matcher = new UrlMatcher($routes, $context);
+
+try {
+    $parameters = $matcher->match($request->getPathInfo());
+    $method = $parameters['_method'];
+    unset($parameters['_controller'], $parameters['_method'], $parameters['_route']);
+
+    $response = $songController->$method($request, ...$parameters);
+} catch (ResourceNotFoundException $e) {
+    $response = new Response('Страница не найдена', Response::HTTP_NOT_FOUND);
+}
+
+$response->send();
