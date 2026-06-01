@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ song.title }} — Песенник{% endblock %}
+
+{% block content %}
+    <article class="song-detail">
+        <h1>{{ song.title }}</h1>
+
+        <div class="song-meta">
+            <span class="song-key">Тональность: {{ song.key_original }}</span>
+            <span class="song-license badge">{{ song.license }}</span>
+        </div>
+
+        {% if artists is not empty %}
+            <div class="song-artists">
+                {% for artist in artists %}
+                    <a href="/artists/{{ artist.artist_slug }}">{{ artist.name }}</a> ({{ artist.role }}){% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="chordpro-content">
+            {{ chordpro_html|raw }}
+        </div>
+
+        <a href="/songs/{{ song.slug }}/edit" class="btn-edit">Редактировать</a>
+    </article>
+{% endblock %}
