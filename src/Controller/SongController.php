@@ -209,6 +209,65 @@ class SongController
         return new RedirectResponse('/songs/' . $slug);
     }
 
+    public function update(Request $request, string $slug): Response
+    {
+        // Найти песню
+        $stmt = $this->pdo->prepare('SELECT * FROM songs WHERE slug = ?');
+        $stmt->execute([$slug]);
+        $song = $stmt->fetch();
+
+        if (!$song) {
+            return new Response('Песня не найдена', Response::HTTP_NOT_FOUND);
+        }
+
+        $data = $request->request->all();
+        $errors = $this->validate($data);
+
+        if (!empty($errors)) {
+            return $this->renderEditForm($data, $slug, $errors);
+        }
+
+        // Fingerprint
+        $firstArtistId = array_key_first($data['artists']);
+        $stmt = $this->pdo->prepare('SELECT name FROM artists WHERE id = ?');
+        $stmt->execute([$firstArtistId]);
+        $firstArtistName = $stmt->fetchColumn();
+        $fingerprint = \App\ChordPro\Fingerprint::compute($data['title'], $data['lyrics_chordpro'], $firstArtistName);
+
+        //Транзакция
+        try {
+            $this->pdo->beginTransaction();
+
+            // UPDATE (slug НЕ меняется)
+            $stmt = $this->pdo->prepare(
+                'UPDATE songs SET title = ?, lyrics_chordpro = ?, key_original = ?, license = ?, fingerprint = ?, updated_at = NOW() WHERE id = ?'
+            );
+            $stmt->execute([
+                $data['title'], $data['lyrics_chordpro'],
+                $data['key_original'], $data['license'], $fingerprint,
+                $song['id']
+            ]);
+
+            // Удаляем старые связи
+            $this->pdo->prepare('DELETE FROM song_artists WHERE song_id = ?')->execute([$song['id']]);
+
+            // Вставляем новые
+            $linkStmt = $this->pdo->prepare('INSERT INTO song_artists (song_id, artist_id, role) VALUES (?, ?, ?)');
+            foreach ($data['artists'] as $artistId => $artist) {
+                if (empty($artist['id'])) continue;
+                $linkStmt->execute([$song['id'], $artistId, $artist['role']]);
+            }
+
+            $this->pdo->commit();
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            $errors['general'] = 'Ошибка при сохранении';
+            return $this->renderEditForm($data, $slug, $errors);
+        }
+
+        return new RedirectResponse('/songs/' . $slug);
+    }
+
     private function validate(array $data): array
     {
         $errors = [];
@@ -292,5 +351,45 @@ class SongController
         ]);
 
         return new Response($html);
+    }
+
+    private function renderEditForm(array $data, string $slug, array $errors): Response
+    {
+        $allArtists = $this->pdo->query('SELECT id, name, slug FROM artists ORDER BY name')->fetchAll();
+        $keys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B',
+            'Am', 'A#m', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m'];
+
+        $html = $this->twig->render('songs/form.html.twig', [
+            'mode' => 'edit',
+            'song' => [
+                'title' => $data['title'] ?? '',
+                'lyrics_chordpro' => $data['lyrics_chordpro'] ?? '',
+                'key_original' => $data['key_original'] ?? 'C',
+                'license' => $data['license'] ?? 'unknown',
+                'slug' => $slug,
+            ],
+            'all_artists' => $allArtists,
+            'selected_artists' => $this->filterSelectedArtists($data['artists'] ?? []),
+            'keys' => $keys,
+            'errors' => $errors,
+        ]);
+
+        return new Response($html);
+    }
+
+    public function delete(Request $request, string $slug): Response
+    {
+        $stmt = $this->pdo->prepare('SELECT id FROM songs WHERE slug = ?');
+        $stmt->execute([$slug]);
+        $song = $stmt->fetch();
+
+        if (!$song) {
+            return new Response('Песня не найдена', Response::HTTP_NOT_FOUND);
+        }
+
+        // Связи удалятся автоматически через ON DELETE CASCADE
+        $this->pdo->prepare('DELETE FROM songs WHERE id = ?')->execute([$song['id']]);
+
+        return new RedirectResponse('/');
     }
 }
