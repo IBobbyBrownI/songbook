@@ -72,8 +72,7 @@
                     {% for artist in all_artists %}
                         <div class="artist-row">
                             <label>
-                                <input type="checkbox" name="artists[{{ artist.id }}][id]"
-                                       value="{{ artist.id }}"
+                                <input type="checkbox" name="artists[{{ artist.id }}][id]" value="{{ artist.id }}"
                                        {% if artist.id in selected_artists|keys %}checked{% endif %}>
                                 {{ artist.name }}
                             </label>

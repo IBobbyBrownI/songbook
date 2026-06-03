@@ -49,7 +49,9 @@ $songController = new SongController($pdo, $twig, $parser, $renderer);
 
 $routes = new RouteCollection();
 $routes->add('songs_list', new Route('/', ['_controller' => 'SongController', '_method' => 'list']));
+$routes->add('songs_create', new Route('/songs', ['_controller' => 'SongController', '_method' => 'create']));
 $routes->add('songs_new', new Route('/songs/new', ['_controller' => 'SongController', '_method' => 'new']));
+$routes->add('songs_edit', new Route('/songs/{slug}/edit', ['_controller' => 'SongController', '_method' => 'edit']));
 $routes->add('songs_show', new Route('/songs/{slug}', ['_controller' => 'SongController', '_method' => 'show']));
 
 
