@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\ChordPro\Parser;
 use App\ChordPro\Renderer;
+use App\ChordPro\Fingerprint;
 use PDO;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 class SongController
 {
@@ -176,7 +178,7 @@ class SongController
         $stmt = $this->pdo->prepare('SELECT name FROM artists WHERE id = ?');
         $stmt->execute([$firstArtistId]);
         $firstArtistName = $stmt->fetchColumn();
-        $fingerprint = \App\ChordPro\Fingerprint::compute($data['title'], $data['lyrics_chordpro'], $firstArtistName);
+        $fingerprint = Fingerprint::compute($data['title'], $data['lyrics_chordpro'], $firstArtistName);
 
         // Транзакция
         try {
@@ -232,7 +234,7 @@ class SongController
         $stmt = $this->pdo->prepare('SELECT name FROM artists WHERE id = ?');
         $stmt->execute([$firstArtistId]);
         $firstArtistName = $stmt->fetchColumn();
-        $fingerprint = \App\ChordPro\Fingerprint::compute($data['title'], $data['lyrics_chordpro'], $firstArtistName);
+        $fingerprint = Fingerprint::compute($data['title'], $data['lyrics_chordpro'], $firstArtistName);
 
         //Транзакция
         try {

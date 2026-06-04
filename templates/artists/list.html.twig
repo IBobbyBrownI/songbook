@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Артисты — Песенник{% endblock %}
+
+{% block content %}
+    <h1>Артисты</h1>
+
+    <a href="/artists/new">Добавить артиста</a>
+
+    {% if artists is empty %}
+        <p>Нет артистов</p>
+    {% else %}
+        <ul>
+            {% for artist in artists %}
+                <li>
+                    <a href="/artists/{{ artist.slug }}">{{ artist.name }}</a>
+                    <span>
+                        {% if artist.songs_count == 1 %}
+                            1 песня
+                        {% elseif artist.songs_count >= 2 and artist.songs_count <= 4 %}
+                            {{ artist.songs_count }} песни
+                        {% else %}
+                            {{ artist.songs_count }} песен
+                        {% endif %}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

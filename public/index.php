@@ -15,6 +15,7 @@ use App\ChordPro\Parser;
 use App\ChordPro\Renderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
+use App\Controller\ArtistController;
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . "/../.env");
@@ -45,6 +46,7 @@ $renderer = new Renderer();
 
 
 $songController = new SongController($pdo, $twig, $parser, $renderer);
+$artistController = new ArtistController($pdo, $twig);
 
 
 $routes = new RouteCollection();
@@ -55,6 +57,9 @@ $routes->add('songs_edit', new Route('/songs/{slug}/edit', ['_controller' => 'So
 $routes->add('songs_update', new Route('/songs/{slug}/update', ['_controller' => 'SongController', '_method' => 'update']));
 $routes->add('songs_delete', new Route('/songs/{slug}/delete', ['_controller' => 'SongController', '_method' => 'delete']));
 $routes->add('songs_show', new Route('/songs/{slug}', ['_controller' => 'SongController', '_method' => 'show']));
+$routes->add('artists_list', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'list']));
+$routes->add('artists_new', new Route('/artists/new', ['_controller' => 'ArtistController', '_method' => 'new']));
+$routes->add('artists_create', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'create']));
 
 
 $request = Request::createFromGlobals();
@@ -64,11 +69,18 @@ $matcher = new UrlMatcher($routes, $context);
 
 try {
     $parameters = $matcher->match($request->getPathInfo());
+    $controllerName = $parameters['_controller'];
     $method = $parameters['_method'];
     unset($parameters['_controller'], $parameters['_method'], $parameters['_route']);
 
-    $response = $songController->$method($request, ...$parameters);
-} catch (ResourceNotFoundException $e) {
+    $controller = match ($controllerName) {
+        'SongController' => $songController,
+        'ArtistController' => $artistController,
+    };
+
+    $response = $controller->$method($request, ...$parameters);
+
+    } catch (ResourceNotFoundException $e) {
     $response = new Response('Страница не найдена', Response::HTTP_NOT_FOUND);
 }
 
