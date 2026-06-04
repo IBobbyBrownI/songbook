@@ -50,6 +50,79 @@ class ArtistController
         return new Response($html);
     }
 
+    public function show(Request $request, string $slug): Response
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM artists WHERE slug = ?');
+        $stmt->execute([$slug]);
+        $artist = $stmt->fetch();
+
+        if (!$artist) {
+            return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
+        }
+
+        // Песни артиста с ролью
+        $stmt = $this->pdo->prepare('
+        SELECT s.title, s.slug, sa.role
+        FROM songs s
+        JOIN song_artists sa ON s.id = sa.song_id
+        WHERE sa.artist_id = ?
+        ORDER BY s.title
+    ');
+        $stmt->execute([$artist['id']]);
+        $songs = $stmt->fetchAll();
+
+        $html = $this->twig->render('artists/show.html.twig', [
+            'artist' => $artist,
+            'songs' => $songs,
+        ]);
+
+        return new Response($html);
+    }
+
+    public function edit(Request $request, string $slug): Response
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM artists WHERE slug = ?');
+        $stmt->execute([$slug]);
+        $artist = $stmt->fetch();
+
+        if (!$artist) {
+            return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
+        }
+
+        $html = $this->twig->render('artists/form.html.twig', [
+            'mode' => 'edit',
+            'artist' => $artist,
+            'errors' => [],
+        ]);
+
+        return new Response($html);
+    }
+
+    public function update(Request $request, string $slug): Response
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM artists WHERE slug = ?');
+        $stmt->execute([$slug]);
+        $artist = $stmt->fetch();
+
+        if (!$artist) {
+            return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
+        }
+
+        $data = $request->request->all();
+        $errors = $this->validateArtist($data);
+
+        if (!empty($errors)) {
+            return $this->renderArtistForm($data, $errors, 'edit', $slug);
+        }
+
+        $stmt = $this->pdo->prepare(
+            'UPDATE artists SET name = ?, bio = ?, updated_at = NOW() WHERE id = ?'
+        );
+        $stmt->execute([$data['name'], $data['bio'] ?? '', $artist['id']]);
+
+        return new RedirectResponse('/artists/' . $slug);
+    }
+
     public function create(Request $request): Response
     {
         $data = $request->request->all();
@@ -79,6 +152,33 @@ class ArtistController
         $stmt->execute([$data['name'], $slug, $data['bio'] ?? '']);
 
         return new RedirectResponse('/artists/' . $slug);
+    }
+
+    public function delete(Request $request, string $slug): Response
+    {
+        $stmt = $this->pdo->prepare('SELECT id, name FROM artists WHERE slug = ?');
+        $stmt->execute([$slug]);
+        $artist = $stmt->fetch();
+
+        if (!$artist) {
+            return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
+        }
+
+        // Проверка: есть ли песни у артиста
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM song_artists WHERE artist_id = ?');
+        $stmt->execute([$artist['id']]);
+        $songsCount = $stmt->fetchColumn();
+
+        if ($songsCount > 0) {
+            return new Response(
+                'Нельзя удалить артиста «' . $artist['name'] . '»: у него ' . $songsCount . ' песен. Сначала отвяжите их.',
+                Response::HTTP_CONFLICT
+            );
+        }
+
+        $this->pdo->prepare('DELETE FROM artists WHERE id = ?')->execute([$artist['id']]);
+
+        return new RedirectResponse('/artists');
     }
 
     private function validateArtist(array $data): array

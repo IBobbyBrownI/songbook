@@ -60,6 +60,10 @@ $routes->add('songs_show', new Route('/songs/{slug}', ['_controller' => 'SongCon
 $routes->add('artists_list', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'list']));
 $routes->add('artists_new', new Route('/artists/new', ['_controller' => 'ArtistController', '_method' => 'new']));
 $routes->add('artists_create', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'create']));
+$routes->add('artists_edit', new Route('/artists/{slug}/edit', ['_controller' => 'ArtistController', '_method' => 'edit']));
+$routes->add('artists_update', new Route('/artists/{slug}/update', ['_controller' => 'ArtistController', '_method' => 'update']));
+$routes->add('artists_delete', new Route('/artists/{slug}/delete', ['_controller' => 'ArtistController', '_method' => 'delete']));
+$routes->add('artists_show', new Route('/artists/{slug}', ['_controller' => 'ArtistController', '_method' => 'show']));
 
 
 $request = Request::createFromGlobals();
