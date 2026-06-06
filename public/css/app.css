@@ -47,6 +47,12 @@ body {
     font-family: system-ui, sans-serif;
 }
 
+textarea {
+    color: #1a1a1a;
+    background: #fff;
+    font-family: system-ui, sans-serif;
+}
+
 .chordpro-comment {
     font-weight: bold;
     margin-top: 20px;

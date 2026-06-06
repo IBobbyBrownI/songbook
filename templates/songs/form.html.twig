@@ -25,8 +25,8 @@
         {# Lyrics ChordPro #}
         <div class="form-group">
             <label for="lyrics_chordpro">Текст песни (ChordPro)</label>
-            <textarea id="lyrics_chordpro" name="lyrics_chordpro" rows="12" required
-                      placeholder="[C]Привет [G]мир">{{ song.lyrics_chordpro }}</textarea>
+                <textarea id="lyrics_chordpro" name="lyrics_chordpro" rows="12" required
+                          placeholder="{title: Название} {key: C} {c: Куплет 1} [C]Текст [G]песни {c: Припев} [F]Другой [C]текст">{{ song.lyrics_chordpro }}</textarea>
             {% if errors.lyrics_chordpro %}
                 <span class="form-error">{{ errors.lyrics_chordpro }}</span>
             {% endif %}

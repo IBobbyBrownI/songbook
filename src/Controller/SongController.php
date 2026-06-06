@@ -35,6 +35,20 @@ class SongController
         $key = $request->query->get('key', '');
         $license = $request->query->get('license', '');
 
+        // Whitelist для license
+        $allowedLicenses = ['public_domain', 'ugc', 'unknown', 'restricted'];
+        if ($license !== '' && !in_array($license, $allowedLicenses, true)) {
+            $license = '';
+        }
+
+        // Whitelist для key — только из доступных в БД
+        if ($key !== '') {
+            $availableKeys = $this->pdo->query('SELECT DISTINCT key_original FROM songs ORDER BY key_original')->fetchAll(PDO::FETCH_COLUMN);
+            if (!in_array($key, $availableKeys, true)) {
+                $key = '';
+            }
+        }
+
         $sql = '
         SELECT s.id, s.title, s.slug, s.key_original,
                GROUP_CONCAT(CONCAT(a.name, \' (\', sa.role, \')\') SEPARATOR \', \') AS artists_info
