@@ -31,21 +31,53 @@ class SongController
     //Список песен из бд
     public function list(Request $request): Response
     {
-        $sql = '
-            SELECT s.title, s.slug, s.key_original, 
-            MIN(a.name) AS first_artist_name
-            FROM songs s
-            LEFT JOIN song_artists sa ON s.id = sa.song_id
-            LEFT JOIN artists a ON sa.artist_id = a.id
-            GROUP BY s.id
-            ORDER BY s.title
-        ';
+        $q = $request->query->get('q', '');
+        $key = $request->query->get('key', '');
+        $license = $request->query->get('license', '');
 
-        $stmt = $this->pdo->query($sql);
+        $sql = '
+        SELECT s.id, s.title, s.slug, s.key_original,
+               GROUP_CONCAT(CONCAT(a.name, \' (\', sa.role, \')\') SEPARATOR \', \') AS artists_info
+        FROM songs s
+        LEFT JOIN song_artists sa ON s.id = sa.song_id
+        LEFT JOIN artists a ON sa.artist_id = a.id
+    ';
+
+        $where = [];
+        $params = [];
+
+        if ($q !== '') {
+            $where[] = '(s.title LIKE :q OR a.name LIKE :q)';
+            $params[':q'] = '%' . $q . '%';
+        }
+
+        if ($key !== '') {
+            $where[] = 's.key_original = :key';
+            $params[':key'] = $key;
+        }
+
+        if ($license !== '') {
+            $where[] = 's.license = :license';
+            $params[':license'] = $license;
+        }
+
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
+
+        $sql .= ' GROUP BY s.id ORDER BY s.title';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $songs = $stmt->fetchAll();
+
+        // Список тональностей для фильтра
+        $availableKeys = $this->pdo->query('SELECT DISTINCT key_original FROM songs ORDER BY key_original')->fetchAll(PDO::FETCH_COLUMN);
 
         $html = $this->twig->render('songs/list.html.twig', [
             'songs' => $songs,
+            'filters' => ['q' => $q, 'key' => $key, 'license' => $license],
+            'available_keys' => $availableKeys,
         ]);
 
         return new Response($html);

@@ -57,9 +57,9 @@ $routes->add('songs_edit', new Route('/songs/{slug}/edit', ['_controller' => 'So
 $routes->add('songs_update', new Route('/songs/{slug}/update', ['_controller' => 'SongController', '_method' => 'update']));
 $routes->add('songs_delete', new Route('/songs/{slug}/delete', ['_controller' => 'SongController', '_method' => 'delete']));
 $routes->add('songs_show', new Route('/songs/{slug}', ['_controller' => 'SongController', '_method' => 'show']));
-$routes->add('artists_list', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'list']));
+$routes->add('artists_list', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'list'], [], [], '', [], ['GET']));
 $routes->add('artists_new', new Route('/artists/new', ['_controller' => 'ArtistController', '_method' => 'new']));
-$routes->add('artists_create', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'create']));
+$routes->add('artists_create', new Route('/artists', ['_controller' => 'ArtistController', '_method' => 'create'], [], [], '', [], ['POST']));
 $routes->add('artists_edit', new Route('/artists/{slug}/edit', ['_controller' => 'ArtistController', '_method' => 'edit']));
 $routes->add('artists_update', new Route('/artists/{slug}/update', ['_controller' => 'ArtistController', '_method' => 'update']));
 $routes->add('artists_delete', new Route('/artists/{slug}/delete', ['_controller' => 'ArtistController', '_method' => 'delete']));

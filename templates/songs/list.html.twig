@@ -1,20 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Песенник{% endblock %}
+{% block title %}Песни — Песенник{% endblock %}
 
 {% block content %}
     <h1>Песни</h1>
 
+    <form method="GET" action="/" class="search-form">
+        <input type="text" name="q" value="{{ filters.q|default('') }}"
+               placeholder="Поиск по названию или артисту...">
+
+        <select name="key">
+            <option value="">Любая тональность</option>
+            {% for key in available_keys %}
+                <option value="{{ key }}" {% if filters.key == key %}selected{% endif %}>{{ key }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="license">
+            <option value="">Любая лицензия</option>
+            <option value="public_domain" {% if filters.license == 'public_domain' %}selected{% endif %}>Общественное достояние</option>
+            <option value="ugc" {% if filters.license == 'ugc' %}selected{% endif %}>Пользовательский контент</option>
+            <option value="unknown" {% if filters.license == 'unknown' %}selected{% endif %}>Не указана</option>
+            <option value="restricted" {% if filters.license == 'restricted' %}selected{% endif %}>Ограниченная</option>
+        </select>
+
+        <button type="submit">Применить</button>
+
+        {% if filters.q or filters.key or filters.license %}
+            <a href="/">Сбросить</a>
+        {% endif %}
+    </form>
+
+    {% if filters.q or filters.key or filters.license %}
+        <p class="active-filters">
+            Применено:
+            {% if filters.q %}поиск «{{ filters.q }}»{% endif %}
+            {% if filters.key %}тональность {{ filters.key }}{% endif %}
+            {% if filters.license %}лицензия {{ filters.license }}{% endif %}
+        </p>
+    {% endif %}
+
     {% if songs is empty %}
-        <p>Нет песен</p>
+        <p>Ничего не найдено</p>
     {% else %}
         <ul class="song-list">
             {% for song in songs %}
                 <li>
                     <a href="/songs/{{ song.slug }}">{{ song.title }}</a>
                     <span class="song-meta">
-                        {% if song.first_artist_name %}
-                            {{ song.first_artist_name }}
+                        {% if song.artists_info %}
+                            {{ song.artists_info }}
                         {% endif %}
                         {% if song.key_original %}
                             — {{ song.key_original }}
