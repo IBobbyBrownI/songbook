@@ -2,35 +2,23 @@
 
 namespace App\Controller;
 
-use PDO;
+use App\Repository\ArtistRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Twig\Environment;
+use Cocur\Slugify\Slugify;
 
 class ArtistController
 {
-    private PDO $pdo;
-    private Environment $twig;
-
-    public function __construct(PDO $pdo, Environment $twig)
-    {
-        $this->pdo = $pdo;
-        $this->twig = $twig;
-    }
+    public function __construct(
+        private ArtistRepository $artists,
+        private Environment $twig
+    ) {}
 
     public function list(Request $request): Response
     {
-        $sql = '
-            SELECT a.id, a.name, a.slug, COUNT(sa.song_id) AS songs_count
-            FROM artists a
-            LEFT JOIN song_artists sa ON a.id = sa.artist_id
-            GROUP BY a.id
-            ORDER BY a.name
-        ';
-
-        $artists = $this->pdo->query($sql)->fetchAll();
+        $artists = $this->artists->findAll();
 
         $html = $this->twig->render('artists/list.html.twig', [
             'artists' => $artists,
@@ -52,24 +40,13 @@ class ArtistController
 
     public function show(Request $request, string $slug): Response
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM artists WHERE slug = ?');
-        $stmt->execute([$slug]);
-        $artist = $stmt->fetch();
+        $artist = $this->artists->findBySlug($slug);
 
         if (!$artist) {
             return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
         }
 
-        // Песни артиста с ролью
-        $stmt = $this->pdo->prepare('
-        SELECT s.title, s.slug, sa.role
-        FROM songs s
-        JOIN song_artists sa ON s.id = sa.song_id
-        WHERE sa.artist_id = ?
-        ORDER BY s.title
-    ');
-        $stmt->execute([$artist['id']]);
-        $songs = $stmt->fetchAll();
+        $songs = $this->artists->findSongsByArtistId($artist['id']);
 
         $html = $this->twig->render('artists/show.html.twig', [
             'artist' => $artist,
@@ -81,9 +58,7 @@ class ArtistController
 
     public function edit(Request $request, string $slug): Response
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM artists WHERE slug = ?');
-        $stmt->execute([$slug]);
-        $artist = $stmt->fetch();
+        $artist = $this->artists->findBySlug($slug);
 
         if (!$artist) {
             return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
@@ -100,9 +75,7 @@ class ArtistController
 
     public function update(Request $request, string $slug): Response
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM artists WHERE slug = ?');
-        $stmt->execute([$slug]);
-        $artist = $stmt->fetch();
+        $artist = $this->artists->findBySlug($slug);
 
         if (!$artist) {
             return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
@@ -115,10 +88,12 @@ class ArtistController
             return $this->renderArtistForm($data, $errors, 'edit', $slug);
         }
 
-        $stmt = $this->pdo->prepare(
-            'UPDATE artists SET name = ?, bio = ?, updated_at = NOW() WHERE id = ?'
-        );
-        $stmt->execute([$data['name'], $data['bio'] ?? '', $artist['id']]);
+        $this->artists->save([
+            'id' => $artist['id'],
+            'name' => $data['name'],
+            'bio' => $data['bio'] ?? '',
+            'slug' => $slug,
+        ]);
 
         return new RedirectResponse('/artists/' . $slug);
     }
@@ -132,42 +107,34 @@ class ArtistController
             return $this->renderArtistForm($data, $errors, 'new');
         }
 
-        // Генерация slug
         $slugify = new Slugify();
         $slug = $slugify->slugify($data['name']);
         $originalSlug = $slug;
         $counter = 2;
 
-        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM artists WHERE slug = ?');
-        while (true) {
-            $stmt->execute([$slug]);
-            if (!$stmt->fetchColumn()) break;
+        while ($this->artists->slugExists($slug)) {
             $slug = $originalSlug . '-' . $counter;
             $counter++;
         }
 
-        $stmt = $this->pdo->prepare(
-            'INSERT INTO artists (name, slug, bio, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())'
-        );
-        $stmt->execute([$data['name'], $slug, $data['bio'] ?? '']);
+        $this->artists->save([
+            'name' => $data['name'],
+            'bio' => $data['bio'] ?? '',
+            'slug' => $slug,
+        ]);
 
         return new RedirectResponse('/artists/' . $slug);
     }
 
     public function delete(Request $request, string $slug): Response
     {
-        $stmt = $this->pdo->prepare('SELECT id, name FROM artists WHERE slug = ?');
-        $stmt->execute([$slug]);
-        $artist = $stmt->fetch();
+        $artist = $this->artists->findBySlug($slug);
 
         if (!$artist) {
             return new Response('Артист не найден', Response::HTTP_NOT_FOUND);
         }
 
-        // Проверка: есть ли песни у артиста
-        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM song_artists WHERE artist_id = ?');
-        $stmt->execute([$artist['id']]);
-        $songsCount = $stmt->fetchColumn();
+        $songsCount = $this->artists->songCount($artist['id']);
 
         if ($songsCount > 0) {
             return new Response(
@@ -176,7 +143,7 @@ class ArtistController
             );
         }
 
-        $this->pdo->prepare('DELETE FROM artists WHERE id = ?')->execute([$artist['id']]);
+        $this->artists->delete($artist['id']);
 
         return new RedirectResponse('/artists');
     }

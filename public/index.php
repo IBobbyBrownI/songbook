@@ -11,11 +11,13 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use App\Controller\SongController;
+use App\Controller\ArtistController;
+use App\Repository\SongRepository;
+use App\Repository\ArtistRepository;
 use App\ChordPro\Parser;
 use App\ChordPro\Renderer;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use App\Controller\ArtistController;
 
 $dotenv = new Dotenv();
 $dotenv->load(__DIR__ . "/../.env");
@@ -27,8 +29,8 @@ $dsn = sprintf(
     $_ENV["DB_NAME"]
 );
 
-$pdo = new PDO
-(   $dsn, $_ENV["DB_USER"],
+$pdo = new PDO(
+    $dsn, $_ENV["DB_USER"],
     $_ENV["DB_PASSWORD"],
     [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -36,19 +38,21 @@ $pdo = new PDO
     ]
 );
 
-
 $loader = new FilesystemLoader(__DIR__ . '/../templates');
 $twig = new Environment($loader);
-
 
 $parser = new Parser();
 $renderer = new Renderer();
 
+// Repository-слой
+$songRepo = new SongRepository($pdo);
+$artistRepo = new ArtistRepository($pdo);
 
-$songController = new SongController($pdo, $twig, $parser, $renderer);
-$artistController = new ArtistController($pdo, $twig);
+// Контроллеры
+$songController = new SongController($songRepo, $artistRepo, $twig, $parser, $renderer);
+$artistController = new ArtistController($artistRepo, $twig);
 
-
+// Маршруты — без изменений
 $routes = new RouteCollection();
 $routes->add('songs_list', new Route('/', ['_controller' => 'SongController', '_method' => 'list']));
 $routes->add('songs_create', new Route('/songs', ['_controller' => 'SongController', '_method' => 'create']));
@@ -65,7 +69,7 @@ $routes->add('artists_update', new Route('/artists/{slug}/update', ['_controller
 $routes->add('artists_delete', new Route('/artists/{slug}/delete', ['_controller' => 'ArtistController', '_method' => 'delete']));
 $routes->add('artists_show', new Route('/artists/{slug}', ['_controller' => 'ArtistController', '_method' => 'show']));
 
-
+// Запрос — без изменений
 $request = Request::createFromGlobals();
 $context = new RequestContext();
 $context->fromRequest($request);
@@ -83,8 +87,7 @@ try {
     };
 
     $response = $controller->$method($request, ...$parameters);
-
-    } catch (ResourceNotFoundException $e) {
+} catch (ResourceNotFoundException $e) {
     $response = new Response('Страница не найдена', Response::HTTP_NOT_FOUND);
 }
 
