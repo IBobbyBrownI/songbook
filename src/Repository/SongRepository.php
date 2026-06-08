@@ -58,12 +58,12 @@ class SongRepository
     public function findArtistsBySongId(int $songId): array
     {
         $stmt = $this->pdo->prepare('
-            SELECT a.name, a.slug AS artist_slug, sa.role
-            FROM artists a
-            JOIN song_artists sa ON a.id = sa.artist_id
-            WHERE sa.song_id = ?
-            ORDER BY FIELD(sa.role, \'author\', \'composer\', \'translator\', \'performer\')
-        ');
+        SELECT a.name, a.slug AS artist_slug, sa.role, sa.artist_id
+        FROM artists a
+        JOIN song_artists sa ON a.id = sa.artist_id
+        WHERE sa.song_id = ?
+        ORDER BY FIELD(sa.role, \'author\', \'composer\', \'translator\', \'performer\')
+    ');
         $stmt->execute([$songId]);
         return $stmt->fetchAll();
     }
