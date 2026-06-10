@@ -1,0 +1,171 @@
+/* ============================================================
+   tokens.css — двухуровневая система токенов (Ocean Blue).
+   Уровень 1: примитивы (--c-*) = данные палитры. ЕДИНСТВЕННОЕ место,
+   где разрешён HEX. Уровень 2: семантика (--color-*) — компоненты
+   ссылаются ТОЛЬКО на неё. Смена темы/ребрендинг = правка этого файла.
+
+   Контраст (WCAG): критериальные пары проходят AA ≥4.5:1 в обеих темах —
+   text/bg, muted/surface, primary-contrast/primary-strong (CTA). Hover —
+   соседний стоп шкалы, не color-mix на лету.
+   ============================================================ */
+
+:root {
+    /* ---------- Уровень 1: ПРИМИТИВЫ (палитра-данные, HEX только тут) ---------- */
+    --c-sky-50:  #F0F9FF;
+    --c-sky-100: #E0F2FE;
+    --c-sky-200: #BAE6FD;
+    --c-sky-300: #7DD3FC;
+    --c-sky-400: #38BDF8;
+    --c-sky-500: #0EA5E9;
+    --c-sky-600: #0284C7;
+    --c-sky-700: #0369A1;
+    --c-sky-800: #075985;
+    --c-sky-900: #0C4A6E;
+
+    --c-blue-300: #93C5FD;
+    --c-blue-400: #60A5FA;
+    --c-blue-500: #3B82F6;
+    --c-blue-600: #2563EB;
+    --c-blue-700: #1D4ED8;
+    --c-blue-800: #1E40AF;
+
+    --c-neutral-900: #0B1A24;
+    --c-neutral-800: #182E3D;
+    --c-neutral-700: #1E3A4D;
+    --c-neutral-600: #2A4A5E;
+    --c-neutral-500: #4E6A78; /* muted light — затемнён с #5B7A8C до AA ≥4.5 */
+    --c-neutral-400: #5B7A8C;
+    --c-neutral-300: #7DA9C0;
+    --c-neutral-200: #A8C7D8;
+    --c-white:       #FFFFFF;
+
+    --c-green-600: #15803D;
+    --c-green-400: #4ADE80;
+    --c-amber-600: #B45309;
+    --c-amber-400: #FBBF24;
+    --c-red-600:   #DC2626;
+    --c-red-400:   #F87171;
+
+    /* ---------- Уровень 2: СЕМАНТИКА (светлая тема по умолчанию) ---------- */
+    --color-bg:            var(--c-white);
+    --color-surface:       var(--c-sky-50);
+    --color-surface-2:     var(--c-sky-100);
+    --color-text:          var(--c-neutral-900);
+    --color-muted:         var(--c-neutral-500);
+    --color-border:        var(--c-sky-200);
+    --color-border-subtle: var(--c-sky-100);
+
+    --color-primary:              var(--c-sky-600);  /* акцент/аккорд/фокус/границы (UI ≥3:1) */
+    --color-primary-hover:        var(--c-sky-700);
+    --color-primary-strong:       var(--c-sky-700);  /* фон CTA-кнопки: white→5.9:1 */
+    --color-primary-strong-hover: var(--c-sky-800);
+    --color-primary-contrast:     var(--c-white);
+
+    --color-accent:          var(--c-blue-600);
+    --color-accent-hover:    var(--c-blue-700);
+    --color-accent-contrast: var(--c-white);         /* white на #2563EB → 5.17:1 */
+
+    --color-focus:   color-mix(in srgb, var(--color-primary) 55%, transparent);
+
+    --color-success: var(--c-green-600);
+    --color-warning: var(--c-amber-600);
+    --color-danger:  var(--c-red-600);
+    --color-danger-contrast: var(--c-white);
+    --color-info:    var(--c-sky-700);
+
+    /* ---------- Доменные токены (chord sheet / stage) ---------- */
+    --chord-color: var(--color-primary);
+    --chord-scale: 1;
+    --sheet-line-height: 2.4;
+
+    /* ---------- Не-цветовые шкалы (имена сохранены) ---------- */
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", "Courier New", monospace;
+
+    --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+    --space-5: 1.5rem;  --space-6: 2rem;   --space-7: 3rem;    --space-8: 4rem;
+
+    --fs-100: 0.8125rem;
+    --fs-200: 0.9rem;
+    --fs-300: 1rem;
+    --fs-400: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+    --fs-500: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+    --fs-600: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+    --fs-700: clamp(2rem, 1.5rem + 2vw, 3rem);
+    --lh-tight: 1.2;
+    --lh-base: 1.6;
+
+    --radius-sm: 6px; --radius: 10px; --radius-lg: 16px; --radius-pill: 999px;
+    --shadow-sm: 0 1px 2px rgba(11, 26, 36, 0.06), 0 1px 1px rgba(11, 26, 36, 0.04);
+    --shadow-md: 0 6px 20px rgba(11, 26, 36, 0.08), 0 2px 6px rgba(11, 26, 36, 0.05);
+    --container: 56rem;
+    --transition: 160ms ease;
+    --z-header: 50;
+    --z-sticky: 40;
+}
+
+/* ---------- Тёмная тема: явный выбор пользователя ---------- */
+:root[data-theme="dark"] {
+    --color-bg:            var(--c-neutral-900);
+    --color-surface:       var(--c-neutral-800);
+    --color-surface-2:     var(--c-neutral-700);
+    --color-text:          var(--c-sky-50);
+    --color-muted:         var(--c-neutral-300);
+    --color-border:        var(--c-neutral-700);
+    --color-border-subtle: var(--c-neutral-800);
+
+    --color-primary:              var(--c-sky-400);  /* осветлён под тёмный фон */
+    --color-primary-hover:        var(--c-sky-300);
+    --color-primary-strong:       var(--c-sky-400);  /* CTA: тёмный текст на светлом primary */
+    --color-primary-strong-hover: var(--c-sky-300);
+    --color-primary-contrast:     var(--c-neutral-900); /* тёмный, не белый */
+
+    --color-accent:          var(--c-blue-400);
+    --color-accent-hover:    var(--c-blue-300);
+    --color-accent-contrast: var(--c-neutral-900);
+
+    --color-focus:   color-mix(in srgb, var(--color-primary) 65%, transparent);
+
+    --color-success: var(--c-green-400);
+    --color-warning: var(--c-amber-400);
+    --color-danger:  var(--c-red-400);
+    --color-danger-contrast: var(--c-neutral-900);
+    --color-info:    var(--c-sky-300);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Тёмная тема: системная, если выбор не сделан ---------- */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --color-bg:            var(--c-neutral-900);
+        --color-surface:       var(--c-neutral-800);
+        --color-surface-2:     var(--c-neutral-700);
+        --color-text:          var(--c-sky-50);
+        --color-muted:         var(--c-neutral-300);
+        --color-border:        var(--c-neutral-700);
+        --color-border-subtle: var(--c-neutral-800);
+
+        --color-primary:              var(--c-sky-400);
+        --color-primary-hover:        var(--c-sky-300);
+        --color-primary-strong:       var(--c-sky-400);
+        --color-primary-strong-hover: var(--c-sky-300);
+        --color-primary-contrast:     var(--c-neutral-900);
+
+        --color-accent:          var(--c-blue-400);
+        --color-accent-hover:    var(--c-blue-300);
+        --color-accent-contrast: var(--c-neutral-900);
+
+        --color-focus:   color-mix(in srgb, var(--color-primary) 65%, transparent);
+
+        --color-success: var(--c-green-400);
+        --color-warning: var(--c-amber-400);
+        --color-danger:  var(--c-red-400);
+        --color-danger-contrast: var(--c-neutral-900);
+        --color-info:    var(--c-sky-300);
+
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+}

@@ -1,30 +1,24 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_pluralize.html.twig' as plural %}
 
 {% block title %}Артисты — Песенник{% endblock %}
 
 {% block content %}
-    <h1>Артисты</h1>
-
-    <a href="/artists/new">Добавить артиста</a>
+    <div class="page-header">
+        <h1>Артисты</h1>
+        <a class="btn btn--primary" href="/artists/new">+ Добавить артиста</a>
+    </div>
 
     {% if artists is empty %}
-        <p>Нет артистов</p>
+        <div class="empty-state">Нет артистов</div>
     {% else %}
-        <ul>
+        <div class="artist-list">
             {% for artist in artists %}
-                <li>
+                <div class="artist-list__row">
                     <a href="/artists/{{ artist.slug }}">{{ artist.name }}</a>
-                    <span>
-                        {% if artist.songs_count == 1 %}
-                            1 песня
-                        {% elseif artist.songs_count >= 2 and artist.songs_count <= 4 %}
-                            {{ artist.songs_count }} песни
-                        {% else %}
-                            {{ artist.songs_count }} песен
-                        {% endif %}
-                    </span>
-                </li>
+                    <span class="chip">{{ plural.songs(artist.songs_count) }}</span>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 {% endblock %}

@@ -1,0 +1,20 @@
+{# Credits песни. Вход (явные пропсы): { artists }.
+   artists = [ { artist_slug, name, role } ] — контроллер отдаёт строку на роль.
+   Группируем по артисту, роли — через карту лейблов. #}
+{% set role_labels = { 'author': 'автор', 'composer': 'композитор', 'translator': 'переводчик', 'performer': 'исполнитель' } %}
+{% set credits = {} %}
+{% for a in artists %}
+    {% set row = credits[a.artist_slug] is defined ? credits[a.artist_slug] : { name: a.name, slug: a.artist_slug, roles: [] } %}
+    {% set row = row|merge({ roles: row.roles|merge([ role_labels[a.role]|default(a.role) ]) }) %}
+    {% set credits = credits|merge({ (a.artist_slug): row }) %}
+{% endfor %}
+{% if credits is not empty %}
+    <div class="song-credits">
+        {% for c in credits %}
+            <div class="credit">
+                <a class="credit__name" href="/artists/{{ c.slug }}">{{ c.name }}</a>
+                <span class="credit__role">{{ c.roles|join(', ') }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

@@ -1,0 +1,245 @@
+/* ============================================================
+   components.css — семантические компоненты.
+   Имена классов = имена компонентов. Только var(--color-*) — ноль HEX.
+   ============================================================ */
+
+/* --- Кнопки --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: var(--fs-200);
+    line-height: 1.2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+.btn:hover { background: var(--color-surface-2); text-decoration: none; }
+.btn:active { transform: translateY(1px); }
+.btn[hidden] { display: none; }
+.btn--primary {
+    background: var(--color-primary-strong);
+    border-color: var(--color-primary-strong);
+    color: var(--color-primary-contrast);
+}
+.btn--primary:hover { background: var(--color-primary-strong-hover); border-color: var(--color-primary-strong-hover); }
+.btn--danger { color: var(--color-danger); border-color: color-mix(in srgb, var(--color-danger) 35%, var(--color-border)); background: transparent; }
+.btn--danger:hover { background: color-mix(in srgb, var(--color-danger) 12%, transparent); }
+.btn--ghost { background: transparent; border-color: transparent; }
+.btn--ghost:hover { background: var(--color-surface-2); }
+.btn--sm { padding: var(--space-1) var(--space-3); font-size: var(--fs-100); }
+
+/* --- Бейдж лицензии --- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15em 0.6em;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-100);
+    font-weight: 600;
+    background: var(--color-surface-2);
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+}
+.badge[data-license="public_domain"] { color: var(--color-success); border-color: color-mix(in srgb, var(--color-success) 35%, var(--color-border)); background: color-mix(in srgb, var(--color-success) 10%, transparent); }
+.badge[data-license="ugc"] { color: var(--color-primary-hover); border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border)); background: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+.badge[data-license="restricted"] { color: var(--color-danger); border-color: color-mix(in srgb, var(--color-danger) 35%, var(--color-border)); background: color-mix(in srgb, var(--color-danger) 10%, transparent); }
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0.15em 0.6em;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-100);
+    background: var(--color-surface-2);
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+}
+
+/* --- Карточка песни / списки --- */
+.song-list { display: grid; gap: var(--space-3); }
+.song-card {
+    display: block;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    color: inherit;
+    transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+}
+.song-card:hover {
+    text-decoration: none;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+}
+.song-card__title { font-size: var(--fs-400); font-weight: 700; color: var(--color-text); }
+.song-card__meta { color: var(--color-muted); font-size: var(--fs-200); margin-top: var(--space-1); display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; }
+
+.artist-list { display: grid; gap: var(--space-2); }
+.artist-list__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+/* --- Фильтр-бар --- */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-5);
+}
+.filter-bar input[type="text"],
+.filter-bar select { flex: 1 1 8rem; min-width: 0; }
+.active-filters { color: var(--color-muted); font-size: var(--fs-200); margin-bottom: var(--space-4); }
+
+/* --- Формы --- */
+.form { display: flex; flex-direction: column; gap: var(--space-5); max-width: 42rem; }
+.form-field { display: flex; flex-direction: column; gap: var(--space-2); }
+.form-field > label { font-weight: 600; font-size: var(--fs-200); }
+.input, .textarea, .select,
+input[type="text"], textarea, select {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+input[type="text"]:focus, textarea:focus, select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-focus);
+    outline: none;
+}
+textarea { resize: vertical; min-height: 6rem; }
+.form-error { color: var(--color-danger); font-size: var(--fs-200); font-weight: 500; }
+.form-field--invalid input,
+.form-field--invalid textarea,
+.form-field--invalid select { border-color: var(--color-danger); }
+
+fieldset { border: 1px solid var(--color-border); border-radius: var(--radius); padding: var(--space-4); }
+legend { font-weight: 600; padding-inline: var(--space-2); }
+
+.artists-grid { display: grid; gap: var(--space-2); grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.artist-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+}
+.artist-row label { display: flex; align-items: center; gap: var(--space-2); flex: 1; cursor: pointer; }
+.artist-row select { flex: 0 0 auto; width: auto; }
+
+/* --- Деталь песни --- */
+.song-detail { display: flex; flex-direction: column; gap: var(--space-4); }
+.song-detail__head { display: flex; flex-direction: column; gap: var(--space-2); }
+.song-meta { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; color: var(--color-muted); font-size: var(--fs-200); }
+.song-artists { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.song-detail__actions { display: flex; gap: var(--space-2); margin-top: var(--space-4); }
+.song-detail__actions form { display: inline; }
+
+/* --- Пустое состояние --- */
+.empty-state {
+    text-align: center;
+    color: var(--color-muted);
+    padding: var(--space-7) var(--space-4);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+/* --- Страница песни (reading-first) --- */
+.song-page { display: flex; flex-direction: column; gap: var(--space-5); }
+.song-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+.song-header__main { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
+.song-header__title { margin: 0; }
+.song-header__actions { display: flex; align-items: center; gap: var(--space-1); flex: 0 0 auto; }
+.song-header__actions form { display: inline; }
+
+/* Credits: имя + роли */
+.song-credits { display: flex; flex-direction: column; gap: var(--space-1); }
+.credit { display: flex; align-items: baseline; gap: 0; flex-wrap: wrap; }
+.credit__name { font-weight: 600; color: var(--color-text); }
+.credit__name:hover { color: var(--color-primary-hover); text-decoration: none; }
+.credit__role { color: var(--color-muted); font-size: var(--fs-200); }
+.credit__role::before { content: "·"; margin-inline: var(--space-2); }
+
+/* Тихий тег лицензии — точка + лейбл, без рамки/заливки */
+.license-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--fs-200);
+    color: var(--color-muted);
+}
+.license-tag::before {
+    content: "";
+    inline-size: 0.55em;
+    block-size: 0.55em;
+    border-radius: 50%;
+    background: var(--color-muted);
+}
+.license-tag[data-license="public_domain"]::before { background: var(--color-success); }
+.license-tag[data-license="ugc"]::before { background: var(--color-primary); }
+.license-tag[data-license="restricted"]::before { background: var(--color-danger); }
+
+/* --- Форма: подсказка, моно-textarea, пикер артистов --- */
+.form-hint { color: var(--color-muted); font-size: var(--fs-200); }
+.form-hint code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-surface-2);
+    padding: 0.05em 0.35em;
+    border-radius: var(--radius-sm);
+}
+.textarea--mono {
+    font-family: var(--font-mono);
+    font-size: var(--fs-200);
+    line-height: 1.7;
+    min-height: 16rem;
+    tab-size: 2;
+}
+
+.artist-picker { display: flex; flex-direction: column; gap: var(--space-2); }
+.artist-picker__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    transition: opacity var(--transition), border-color var(--transition);
+}
+.artist-picker__row:has(input:checked) { border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border)); }
+.artist-picker__row:not(:has(input:checked)) { opacity: 0.55; }
+.artist-picker__check { display: flex; align-items: center; gap: var(--space-2); flex: 1; cursor: pointer; min-width: 0; }
+.artist-picker__role { flex: 0 0 auto; width: auto; }

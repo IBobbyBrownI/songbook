@@ -2,4 +2,9 @@
 .env
 *.log
 .DS_Store 
-Thumbs.db 
+.idea
+Thumbs.db
+
+# Twig cache
+/var/
+.gstack/

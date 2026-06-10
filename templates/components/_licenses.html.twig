@@ -1,0 +1,23 @@
+{# Карта лейблов лицензий — единый источник (раньше дублировалось в list/form). #}
+
+{% macro label(key) %}
+{%- set map = {
+    'public_domain': 'Общественное достояние',
+    'ugc': 'Пользовательский контент',
+    'unknown': 'Не указана',
+    'restricted': 'Ограниченная'
+} -%}
+{{- map[key]|default(key) -}}
+{% endmacro %}
+
+{% macro options(selected) %}
+{%- set map = {
+    'unknown': 'Не указана',
+    'public_domain': 'Общественное достояние',
+    'ugc': 'Пользовательский контент',
+    'restricted': 'Ограниченная'
+} -%}
+{% for value, text in map %}
+    <option value="{{ value }}" {% if selected == value %}selected{% endif %}>{{ text }}</option>
+{% endfor %}
+{% endmacro %}

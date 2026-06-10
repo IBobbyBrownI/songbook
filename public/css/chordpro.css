@@ -1,0 +1,101 @@
+/* ============================================================
+   chordpro.css — рендер аккордов над текстом + stage-режим.
+   Классы .chordpro-line, .chord, .text приходят из src/ChordPro/Renderer
+   (бэк) — НЕ переименовывать. Только var(--color-...) / --chord-...
+   ============================================================ */
+
+.chord-sheet {
+    font-family: var(--font-mono);
+    font-size: calc(var(--fs-300) * var(--chord-scale));
+    line-height: 2.0;
+    transition: font-size var(--transition);
+    max-width: 46rem;
+}
+
+/* Инфо-строка над листом (тональность) */
+.sheet-meta { color: var(--color-muted); font-size: var(--fs-200); margin-bottom: var(--space-2); }
+.sheet-meta__key { font-family: var(--font-mono); font-weight: 700; color: var(--color-text); }
+
+.chordpro-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 0.25em;
+}
+
+.chord-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+}
+
+.chord {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.85em;
+    color: var(--chord-color);
+    white-space: pre;
+    line-height: 1.1;
+}
+
+.text { font-family: var(--font-mono); white-space: pre-wrap; }
+
+/* Секции как Ultimate Guitar: [Припев], [Куплет 1] … */
+.chordpro-comment {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: var(--color-text);
+    margin-top: 1.6em;
+    margin-bottom: 0.4em;
+}
+.chordpro-comment::before { content: "["; }
+.chordpro-comment::after { content: "]"; }
+
+.chordpro-blank { height: 0.8em; }
+
+/* --- Тулбар островов (базовый, в боксе) --- */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+/* <stage-reader> — слим липкая панель чтения (масштаб + автоскролл), справа */
+stage-reader {
+    display: flex;
+    justify-content: flex-end;
+    position: sticky;
+    top: 3.25rem; /* высота шапки */
+    z-index: var(--z-sticky);
+    margin-bottom: var(--space-2);
+    padding-block: var(--space-1);
+    background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+    backdrop-filter: saturate(140%) blur(6px);
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+/* внутри stage-reader тулбар без «коробки» */
+stage-reader .toolbar {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    gap: var(--space-1);
+}
+.stage-scale-value { font-variant-numeric: tabular-nums; min-width: 3.25rem; text-align: center; color: var(--color-muted); }
+
+/* --- ChordPro reading-типографика --- */
+.chordpro-line:first-child,
+.chordpro-comment:first-child { margin-top: 0; }
+
+/* Дормант: стили транспонирования (<song-transposer> убран со страницы,
+   модуль остаётся для возврата в H2) */
+song-transposer { display: block; }
+.transpose-bar { margin-bottom: var(--space-3); }
+.transpose-key { font-family: var(--font-mono); font-weight: 700; min-width: 4.5rem; justify-content: center; }

@@ -3,60 +3,29 @@
 {% block title %}Песни — Песенник{% endblock %}
 
 {% block content %}
-    <h1>Песни</h1>
+    <div class="page-header">
+        <h1>Песни</h1>
+        <a class="btn btn--primary" href="/songs/new">+ Добавить песню</a>
+    </div>
 
-    <form method="GET" action="/" class="search-form">
-        <input type="text" name="q" value="{{ filters.q|default('') }}"
-               placeholder="Поиск по названию или артисту...">
-
-        <select name="key">
-            <option value="">Любая тональность</option>
-            {% for key in available_keys %}
-                <option value="{{ key }}" {% if filters.key == key %}selected{% endif %}>{{ key }}</option>
-            {% endfor %}
-        </select>
-
-        <select name="license">
-            <option value="">Любая лицензия</option>
-            <option value="public_domain" {% if filters.license == 'public_domain' %}selected{% endif %}>Общественное достояние</option>
-            <option value="ugc" {% if filters.license == 'ugc' %}selected{% endif %}>Пользовательский контент</option>
-            <option value="unknown" {% if filters.license == 'unknown' %}selected{% endif %}>Не указана</option>
-            <option value="restricted" {% if filters.license == 'restricted' %}selected{% endif %}>Ограниченная</option>
-        </select>
-
-        <button type="submit">Применить</button>
-
-        {% if filters.q or filters.key or filters.license %}
-            <a href="/">Сбросить</a>
-        {% endif %}
-    </form>
+    {% include 'components/_filter_bar.html.twig' with { filters: filters, available_keys: available_keys } only %}
 
     {% if filters.q or filters.key or filters.license %}
         <p class="active-filters">
             Применено:
             {% if filters.q %}поиск «{{ filters.q }}»{% endif %}
-            {% if filters.key %}тональность {{ filters.key }}{% endif %}
-            {% if filters.license %}лицензия {{ filters.license }}{% endif %}
+            {% if filters.key %}· тональность {{ filters.key }}{% endif %}
+            {% if filters.license %}· лицензия {{ filters.license }}{% endif %}
         </p>
     {% endif %}
 
     {% if songs is empty %}
-        <p>Ничего не найдено</p>
+        <div class="empty-state">Ничего не найдено</div>
     {% else %}
-        <ul class="song-list">
+        <div class="song-list">
             {% for song in songs %}
-                <li>
-                    <a href="/songs/{{ song.slug }}">{{ song.title }}</a>
-                    <span class="song-meta">
-                        {% if song.artists_info %}
-                            {{ song.artists_info }}
-                        {% endif %}
-                        {% if song.key_original %}
-                            — {{ song.key_original }}
-                        {% endif %}
-                    </span>
-                </li>
+                {% include 'components/_song_card.html.twig' with { song: song } only %}
             {% endfor %}
-        </ul>
+        </div>
     {% endif %}
 {% endblock %}

@@ -1,65 +1,26 @@
-/* ChordPro — рендер аккордов над текстом */
+/* ============================================================
+   app.css — точка входа. Объявляет каскадные слои и импортирует
+   модули в строгом порядке (@layer решает войны специфичности).
+   Подключается одним <link> в base.html.twig.
+   ============================================================ */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+@layer tokens, base, layout, components, chordpro, utilities;
 
-body {
-    font-family: system-ui, -apple-system, sans-serif;
-    line-height: 1.6;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-}
+@import "tokens.css" layer(tokens);
+@import "base.css" layer(base);
+@import "layout.css" layer(layout);
+@import "components.css" layer(components);
+@import "chordpro.css" layer(chordpro);
 
-.chordpro-line {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    margin-bottom: 8px;
-    line-height: 2.2;
-}
-
-.chord-block {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-right: 0;   /* убрать отступ */
-    min-width: 0;
-}
-
-.chord + .text {
-    margin-top: 0;
-}
-
-.chord {
-    font-weight: bold;
-    color: #2563eb;
-    font-size: 0.85em;
-    font-family: "Courier New", monospace;
-    white-space: pre;
-    margin-bottom: 0;
-}
-
-.text {
-    font-family: system-ui, sans-serif;
-}
-
-textarea {
-    color: #1a1a1a;
-    background: #fff;
-    font-family: system-ui, sans-serif;
-}
-
-.chordpro-comment {
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 6px;
-    color: #374151;
-}
-
-.chordpro-blank {
-    height: 16px;
+@layer utilities {
+    [hidden] { display: none !important; }
+    .visually-hidden {
+        position: absolute !important;
+        width: 1px; height: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden; clip: rect(0, 0, 0, 0);
+        white-space: nowrap; border: 0;
+    }
+    .text-muted { color: var(--ink-muted); }
+    .mt-0 { margin-top: 0; }
 }

@@ -3,30 +3,33 @@
 {% block title %}{{ artist.name }} — Песенник{% endblock %}
 
 {% block content %}
-    <h1>{{ artist.name }}</h1>
+    <article class="stack">
+        <div class="page-header">
+            <h1>{{ artist.name }}</h1>
+            <div class="cluster">
+                <a class="btn" href="/artists/{{ artist.slug }}/edit">Редактировать</a>
+                <form method="POST" action="/artists/{{ artist.slug }}/delete" onsubmit="return confirm('Удалить артиста?');">
+                    <button class="btn btn--danger" type="submit">Удалить</button>
+                </form>
+            </div>
+        </div>
 
-    {% if artist.bio %}
-        <p>{{ artist.bio|nl2br }}</p>
-    {% endif %}
+        {% if artist.bio %}
+            <p>{{ artist.bio|nl2br }}</p>
+        {% endif %}
 
-    <h2>Песни</h2>
-
-    {% if songs is empty %}
-        <p>Нет песен</p>
-    {% else %}
-        <ul>
-            {% for song in songs %}
-                <li>
-                    <a href="/songs/{{ song.slug }}">{{ song.title }}</a>
-                    <span>({{ song.role }})</span>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <a href="/artists/{{ artist.slug }}/edit">Редактировать</a>
-
-    <form method="POST" action="/artists/{{ artist.slug }}/delete" onsubmit="return confirm('Удалить артиста?');">
-        <button type="submit">Удалить</button>
-    </form>
+        <h2>Песни</h2>
+        {% if songs is empty %}
+            <div class="empty-state">Нет песен</div>
+        {% else %}
+            <ul class="artist-list">
+                {% for song in songs %}
+                    <li class="artist-list__row">
+                        <a href="/songs/{{ song.slug }}">{{ song.title }}</a>
+                        <span class="chip">{{ song.role }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </article>
 {% endblock %}

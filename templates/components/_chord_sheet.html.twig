@@ -1,0 +1,6 @@
+{# Chord sheet. Вход (явные пропсы): { song, chordpro_html }.
+   Транспонирование убрано (модуль <song-transposer> остаётся дормантом для H2).
+   <stage-reader> масштабирует/скроллит лист по data-target → #sheet-{slug}. #}
+<p class="sheet-meta">Тональность: <span class="sheet-meta__key">{{ song.key_original }}</span></p>
+<stage-reader data-target="sheet-{{ song.slug }}"></stage-reader>
+<div id="sheet-{{ song.slug }}" class="chord-sheet">{{ chordpro_html|raw }}</div>

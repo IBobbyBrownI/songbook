@@ -3,29 +3,21 @@
 {% block title %}{{ song.title }} — Песенник{% endblock %}
 
 {% block content %}
-    <article class="song-detail">
-        <h1>{{ song.title }}</h1>
-
-        <div class="song-meta">
-            <span class="song-key">Тональность: {{ song.key_original }}</span>
-            <span class="song-license badge">{{ song.license }}</span>
-        </div>
-
-        {% if artists is not empty %}
-            <div class="song-artists">
-                {% for artist in artists %}
-                    <a href="/artists/{{ artist.artist_slug }}">{{ artist.name }}</a> ({{ artist.role }}){% if not loop.last %}, {% endif %}
-                {% endfor %}
+    <article class="song-page">
+        <header class="song-header">
+            <div class="song-header__main">
+                <h1 class="song-header__title">{{ song.title }}</h1>
+                {% include 'components/_credits.html.twig' with { artists: artists } only %}
+                {% include 'components/_badge.html.twig' with { license: song.license } only %}
             </div>
-        {% endif %}
+            <div class="song-header__actions">
+                <a class="btn btn--ghost btn--sm" href="/songs/{{ song.slug }}/edit">Изменить</a>
+                <form method="POST" action="/songs/{{ song.slug }}/delete" onsubmit="return confirm('Удалить песню?');">
+                    <button class="btn btn--ghost btn--sm btn--danger" type="submit">Удалить</button>
+                </form>
+            </div>
+        </header>
 
-        <div class="chordpro-content">
-            {{ chordpro_html|raw }}
-        </div>
-
-        <a href="/songs/{{ song.slug }}/edit" class="btn-edit">Редактировать</a>
-        <form method="POST" action="/songs/{{ song.slug }}/delete" onsubmit="return confirm('Удалить песню?');">
-            <button type="submit" class="btn-delete">Удалить</button>
-        </form>
+        {% include 'components/_chord_sheet.html.twig' with { song: song, chordpro_html: chordpro_html } only %}
     </article>
 {% endblock %}
