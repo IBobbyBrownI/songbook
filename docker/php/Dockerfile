@@ -1,7 +1,6 @@
 FROM php:8.4-cli-alpine
 
-# Установка системных зависимостей для MySQL
+# Расширения для MySQL компилируются из исходников образа — без apk и без сети.
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Папка для кода
 WORKDIR /var/www/html
