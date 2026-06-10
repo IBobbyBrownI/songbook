@@ -39,7 +39,17 @@ $pdo = new PDO(
 );
 
 $loader = new FilesystemLoader(__DIR__ . '/../templates');
-$twig = new Environment($loader);
+$twig = new Environment($loader, [
+    'cache' => __DIR__ . '/../var/twig',
+    'auto_reload' => true,
+    'debug' => true,
+]);
+// asset() — версионирование статики по mtime (cache-busting). Presentation-обвязка, не доменный бэк.
+$twig->addFunction(new \Twig\TwigFunction('asset', static function (string $path): string {
+    $rel = '/' . ltrim($path, '/');
+    $file = __DIR__ . $rel;
+    return is_file($file) ? $rel . '?v=' . filemtime($file) : $rel;
+}));
 
 $parser = new Parser();
 $renderer = new Renderer();

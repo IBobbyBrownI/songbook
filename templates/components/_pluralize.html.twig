@@ -1,0 +1,13 @@
+{# Плюрализация количества песен: 1 песня / 2 песни / 5 песен. #}
+
+{% macro songs(count) %}
+{%- set n = count % 100 -%}
+{%- if n >= 11 and n <= 14 -%}
+    {{ count }} песен
+{%- else -%}
+    {%- set d = count % 10 -%}
+    {%- if d == 1 -%}{{ count }} песня
+    {%- elseif d >= 2 and d <= 4 -%}{{ count }} песни
+    {%- else -%}{{ count }} песен{%- endif -%}
+{%- endif -%}
+{% endmacro %}

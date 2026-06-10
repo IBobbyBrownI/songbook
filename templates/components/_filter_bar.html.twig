@@ -1,0 +1,24 @@
+{# Поиск + фильтры. Вход (явные пропсы): { filters, available_keys }.
+   filters = { q, key, license }; GET /, серверная фильтрация без изменений. #}
+{% import 'components/_licenses.html.twig' as licenses %}
+<form method="GET" action="/" class="filter-bar" role="search">
+    <input type="text" name="q" value="{{ filters.q|default('') }}"
+           placeholder="Поиск по названию или артисту…" aria-label="Поиск">
+
+    <select name="key" aria-label="Тональность">
+        <option value="">Любая тональность</option>
+        {% for key in available_keys %}
+            <option value="{{ key }}" {% if filters.key == key %}selected{% endif %}>{{ key }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="license" aria-label="Лицензия">
+        <option value="">Любая лицензия</option>
+        {{ licenses.options(filters.license|default('')) }}
+    </select>
+
+    <button class="btn btn--primary" type="submit">Применить</button>
+    {% if filters.q or filters.key or filters.license %}
+        <a class="btn btn--ghost" href="/">Сбросить</a>
+    {% endif %}
+</form>

@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_form_field.html.twig' as field %}
 
 {% block title %}
     {% if mode == 'edit' %}Редактировать артиста{% else %}Новый артист{% endif %} — Песенник
@@ -7,27 +8,15 @@
 {% block content %}
     <h1>{% if mode == 'edit' %}Редактировать артиста{% else %}Новый артист{% endif %}</h1>
 
-    <form method="POST"
+    <form class="form" method="POST"
           action="{% if mode == 'edit' %}/artists/{{ artist.slug }}/update{% else %}/artists{% endif %}">
 
-        <div>
-            <label for="name">Имя</label>
-            <input type="text" id="name" name="name" value="{{ artist.name }}" maxlength="255" required>
-            {% if errors.name %}
-                <span class="form-error">{{ errors.name }}</span>
-            {% endif %}
-        </div>
+        {{ field.text('name', 'Имя', artist.name, errors.name, 'maxlength="255" required') }}
+        {{ field.textarea('bio', 'Биография', artist.bio, errors.bio, 'rows="5"') }}
 
-        <div>
-            <label for="bio">Биография</label>
-            <textarea id="bio" name="bio" rows="5">{{ artist.bio }}</textarea>
-            {% if errors.bio %}
-                <span class="form-error">{{ errors.bio }}</span>
-            {% endif %}
+        <div class="cluster">
+            <button class="btn btn--primary" type="submit">{% if mode == 'edit' %}Сохранить{% else %}Создать{% endif %}</button>
+            <a class="btn btn--ghost" href="/artists">Отмена</a>
         </div>
-
-        <button type="submit">
-            {% if mode == 'edit' %}Сохранить{% else %}Создать{% endif %}
-        </button>
     </form>
 {% endblock %}

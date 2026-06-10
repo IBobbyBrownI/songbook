@@ -3,24 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# no-FOUC: выставить выбранную тему до первого рендера #}
+    <script>(function(){try{var t=localStorage.getItem('songbook-theme');if(t){document.documentElement.dataset.theme=t;}}catch(e){}})();</script>
     <title>{% block title %}Песенник{% endblock %}</title>
-    <link rel="stylesheet" href="/css/app.css">
+    <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {# Lit резолвится через import map → вендоренный ESM-бандл (без сборки/CDN) #}
+    <script type="importmap">{ "imports": { "lit": "{{ asset('js/vendor/lit-all.min.js') }}" } }</script>
+    <script type="module" src="{{ asset('js/app.js') }}"></script>
+    {% block head %}{% endblock %}
 </head>
 <body>
+<a class="skip-link" href="#content">Перейти к содержимому</a>
+
 <header class="site-header">
-    <nav>
-        <a href="/" class="logo">Песенник</a>
-        <a href="/songs/new">Добавить песню</a>
-        <a href="/artists">Артисты</a>
-    </nav>
+    <div class="container site-header__inner">
+        <a href="/" class="brand">♪ Песенник</a>
+        <nav class="site-nav" aria-label="Основная навигация">
+            <a href="/">Песни</a>
+            <a href="/artists">Артисты</a>
+        </nav>
+        <div class="site-header__spacer"></div>
+        <theme-toggle></theme-toggle>
+        <a href="/songs/new" class="btn btn--primary btn--sm">+ Песня</a>
+    </div>
 </header>
 
-<main class="site-content">
-    {% block content %}{% endblock %}
+<main id="content" class="site-content">
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
 </main>
 
 <footer class="site-footer">
-    <p>Песенник &copy; 2026</p>
+    <div class="container">Песенник &copy; 2026</div>
 </footer>
+
+{% block scripts %}{% endblock %}
 </body>
 </html>

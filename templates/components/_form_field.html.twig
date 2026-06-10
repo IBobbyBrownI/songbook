@@ -1,0 +1,17 @@
+{# Поля формы. Явные пропсы у каждого макроса. Переиспользуются формами песни/артиста. #}
+
+{% macro text(name, label, value, error, attrs) %}
+<div class="form-field {% if error %}form-field--invalid{% endif %}">
+    <label for="{{ name }}">{{ label }}</label>
+    <input type="text" id="{{ name }}" name="{{ name }}" value="{{ value }}" {{ attrs|default('')|raw }}>
+    {% if error %}<span class="form-error">{{ error }}</span>{% endif %}
+</div>
+{% endmacro %}
+
+{% macro textarea(name, label, value, error, attrs) %}
+<div class="form-field {% if error %}form-field--invalid{% endif %}">
+    <label for="{{ name }}">{{ label }}</label>
+    <textarea id="{{ name }}" name="{{ name }}" {{ attrs|default('')|raw }}>{{ value }}</textarea>
+    {% if error %}<span class="form-error">{{ error }}</span>{% endif %}
+</div>
+{% endmacro %}

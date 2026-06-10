@@ -1,0 +1,3 @@
+{# Тихий тег лицензии (точка + лейбл). Вход (явные пропсы): { license }. #}
+{% import 'components/_licenses.html.twig' as licenses %}
+<span class="license-tag" data-license="{{ license }}">{{ licenses.label(license) }}</span>
