@@ -1,12 +1,20 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_pluralize.html.twig' as plural %}
+{% block active %}songs{% endblock %}
 
 {% block title %}Песни — Песенник{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>Песни</h1>
-        <a class="btn btn--primary" href="/songs/new">+ Добавить песню</a>
-    </div>
+    <section class="title-page">
+        <p class="eyebrow title-page__eyebrow">Песенник</p>
+        <h1 class="title-page__title">Песни</h1>
+        <p class="title-page__lead">Тексты с аккордами над строкой — для репетиции и сцены.</p>
+        {% if songs is not empty %}
+            <div class="title-page__meta">
+                <span class="chip">{{ plural.songs(songs|length) }}</span>
+            </div>
+        {% endif %}
+    </section>
 
     {% include 'components/_filter_bar.html.twig' with { filters: filters, available_keys: available_keys } only %}
 
@@ -20,7 +28,12 @@
     {% endif %}
 
     {% if songs is empty %}
-        <div class="empty-state">Ничего не найдено</div>
+        <div class="empty-state">
+            <p>Ничего не найдено.</p>
+            <div class="empty-state__actions">
+                <a class="btn btn--primary" href="/songs/new">+ Добавить песню</a>
+            </div>
+        </div>
     {% else %}
         <div class="song-list">
             {% for song in songs %}

@@ -10,35 +10,48 @@
     padding-inline: var(--space-4);
 }
 
-/* --- Шапка --- */
+/* --- Шапка как книжный колонтитул --- */
 .site-header {
     position: sticky;
     top: 0;
     z-index: var(--z-header);
-    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
+    background: color-mix(in srgb, var(--color-bg) 88%, transparent);
     backdrop-filter: saturate(140%) blur(8px);
     border-bottom: 1px solid var(--color-border);
 }
 .site-header__inner {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    min-height: 3.5rem;
+    gap: var(--space-4);
+    min-height: var(--header-height);
     padding-block: var(--space-2);
 }
 .site-nav {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-2);
 }
-.site-nav a { color: var(--color-muted); font-weight: 500; }
+.site-nav a {
+    color: var(--color-muted);
+    font-weight: 500;
+    font-size: var(--fs-200);
+    padding: var(--space-2) var(--space-2);
+    border-radius: var(--radius-sm);
+}
 .site-nav a:hover { color: var(--color-text); text-decoration: none; }
+.site-nav a[aria-current="page"] { color: var(--color-text); font-weight: 600; }
 .brand {
-    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-serif);
+    font-weight: 700;
     font-size: var(--fs-400);
     color: var(--color-text) !important;
     letter-spacing: -0.01em;
 }
+.brand:hover { text-decoration: none; }
+.brand__mark { color: var(--color-primary); flex: 0 0 auto; }
 .site-header__spacer { margin-left: auto; }
 
 /* --- Контент / подвал --- */
@@ -66,8 +79,40 @@
 .page-header {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-3);
     margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+}
+.page-header h1 { margin: 0; }
+
+/* --- Титульная «страница» песенника (hero списка) --- */
+.title-page {
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-5);
+    border-bottom: 2px solid var(--color-text);
+}
+.title-page__eyebrow { margin-bottom: var(--space-3); }
+.title-page__title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--fs-700);
+    line-height: var(--lh-tight);
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+.title-page__lead {
+    margin-top: var(--space-3);
+    max-width: 40rem;
+    color: var(--color-muted);
+    font-size: var(--fs-400);
+}
+.title-page__meta {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
 }

@@ -1,0 +1,11 @@
+{# Карта ролей артиста (role → RU). Единый источник — переиспользуется
+   в _credits и artists/show, чтобы роли везде были локализованы одинаково. #}
+{% macro label(role) %}
+{%- set map = {
+    'author': 'автор',
+    'composer': 'композитор',
+    'translator': 'переводчик',
+    'performer': 'исполнитель'
+} -%}
+{{- map[role]|default(role) -}}
+{% endmacro %}

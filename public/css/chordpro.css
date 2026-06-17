@@ -1,20 +1,45 @@
 /* ============================================================
-   chordpro.css — рендер аккордов над текстом + stage-режим.
-   Классы .chordpro-line, .chord, .text приходят из src/ChordPro/Renderer
-   (бэк) — НЕ переименовывать. Только var(--color-...) / --chord-...
+   chordpro.css — signature-элемент: лид-шит как свёрстанная
+   «страница». Аккорды (тил, моно) над пропорциональной лирикой.
+   Классы .chordpro-line, .chord-block, .chord, .text, .chordpro-comment,
+   .chordpro-blank приходят из src/ChordPro/Renderer (бэк) —
+   НЕ переименовывать. Только var(--color-...) / --chord-...
    ============================================================ */
 
+/* «Бумажный» лист */
 .chord-sheet {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
     font-size: calc(var(--fs-300) * var(--chord-scale));
-    line-height: 2.0;
+    line-height: var(--sheet-line-height);
+    max-width: var(--measure);
+    padding: var(--space-6) clamp(var(--space-4), 4vw, var(--space-6));
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     transition: font-size var(--transition);
-    max-width: 46rem;
 }
 
 /* Инфо-строка над листом (тональность) */
-.sheet-meta { color: var(--color-muted); font-size: var(--fs-200); margin-bottom: var(--space-2); }
-.sheet-meta__key { font-family: var(--font-mono); font-weight: 700; color: var(--color-text); }
+.sheet-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-muted);
+    font-size: var(--fs-100);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+}
+.sheet-meta__key {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--fs-200);
+    letter-spacing: 0;
+    color: var(--color-primary);
+    text-transform: none;
+}
 
 .chordpro-line {
     display: flex;
@@ -32,39 +57,38 @@
 
 .chord {
     font-family: var(--font-mono);
-    font-weight: 700;
-    font-size: 0.85em;
+    font-weight: 600;
+    font-size: 0.78em;
+    letter-spacing: 0.02em;
     color: var(--chord-color);
     white-space: pre;
     line-height: 1.1;
+    padding-bottom: 0.1em;
 }
 
-.text { font-family: var(--font-mono); white-space: pre-wrap; }
+/* Лирика — пропорциональная (читаемее сплошного моно) */
+.text { font-family: inherit; white-space: pre-wrap; }
 
-/* Секции как Ultimate Guitar: [Припев], [Куплет 1] … */
+/* Секции — small-caps маргиналии (без UG-скобок) */
 .chordpro-comment {
-    font-family: var(--font-mono);
-    font-weight: 700;
-    color: var(--color-text);
-    margin-top: 1.6em;
-    margin-bottom: 0.4em;
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: var(--fs-100);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-top: 1.8em;
+    margin-bottom: 0.5em;
 }
-.chordpro-comment::before { content: "["; }
-.chordpro-comment::after { content: "]"; }
 
 .chordpro-blank { height: 0.8em; }
 
-/* --- Тулбар островов (базовый, в боксе) --- */
+/* --- Тулбар островов (базовый) --- */
 .toolbar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
-    padding: var(--space-2);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
 }
 
 /* <stage-reader> — слим липкая панель чтения (масштаб + автоскролл), справа */
@@ -72,25 +96,18 @@ stage-reader {
     display: flex;
     justify-content: flex-end;
     position: sticky;
-    top: 3.25rem; /* высота шапки */
+    top: var(--header-height);
     z-index: var(--z-sticky);
     margin-bottom: var(--space-2);
     padding-block: var(--space-1);
-    background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+    background: color-mix(in srgb, var(--color-bg) 85%, transparent);
     backdrop-filter: saturate(140%) blur(6px);
     border-bottom: 1px solid var(--color-border-subtle);
 }
-/* внутри stage-reader тулбар без «коробки» */
-stage-reader .toolbar {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    gap: var(--space-1);
-}
-.stage-scale-value { font-variant-numeric: tabular-nums; min-width: 3.25rem; text-align: center; color: var(--color-muted); }
+stage-reader .toolbar { gap: var(--space-1); }
+.stage-scale-value { font-family: var(--font-mono); font-variant-numeric: tabular-nums; min-width: 3.25rem; text-align: center; color: var(--color-muted); }
 
-/* --- ChordPro reading-типографика --- */
+/* --- Reading-типографика --- */
 .chordpro-line:first-child,
 .chordpro-comment:first-child { margin-top: 0; }
 

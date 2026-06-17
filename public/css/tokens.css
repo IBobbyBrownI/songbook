@@ -1,87 +1,100 @@
 /* ============================================================
-   tokens.css — двухуровневая система токенов (Ocean Blue).
-   Уровень 1: примитивы (--c-*) = данные палитры. ЕДИНСТВЕННОЕ место,
-   где разрешён HEX. Уровень 2: семантика (--color-*) — компоненты
-   ссылаются ТОЛЬКО на неё. Смена темы/ребрендинг = правка этого файла.
+   tokens.css — двухуровневая система токенов («Editorial» —
+   печатный песенник: прохладная бумага + чернила + тил-акцент).
 
-   Контраст (WCAG): критериальные пары проходят AA ≥4.5:1 в обеих темах —
-   text/bg, muted/surface, primary-contrast/primary-strong (CTA). Hover —
-   соседний стоп шкалы, не color-mix на лету.
+   Уровень 1: примитивы (--c-*) = данные палитры. ЕДИНСТВЕННОЕ место
+   с HEX. Уровень 2: семантика (--color-*) — компоненты ссылаются
+   ТОЛЬКО на неё.
+
+   Темы — через CSS light-dark(): ОДИН источник на токен, без дубля.
+   Активная схема определяется color-scheme (см. ниже):
+     • нет data-theme → следуем системе (light dark);
+     • data-theme=light/dark → явный выбор пользователя (theme-toggle).
+
+   Контраст (WCAG AA ≥4.5:1) проверен для критичных пар в обеих темах:
+   text/bg, muted/bg, primary/bg (ссылки), primary-contrast/primary-strong.
    ============================================================ */
 
 :root {
-    /* ---------- Уровень 1: ПРИМИТИВЫ (палитра-данные, HEX только тут) ---------- */
-    --c-sky-50:  #F0F9FF;
-    --c-sky-100: #E0F2FE;
-    --c-sky-200: #BAE6FD;
-    --c-sky-300: #7DD3FC;
-    --c-sky-400: #38BDF8;
-    --c-sky-500: #0EA5E9;
-    --c-sky-600: #0284C7;
-    --c-sky-700: #0369A1;
-    --c-sky-800: #075985;
-    --c-sky-900: #0C4A6E;
+    color-scheme: light dark;
 
-    --c-blue-300: #93C5FD;
-    --c-blue-400: #60A5FA;
-    --c-blue-500: #3B82F6;
-    --c-blue-600: #2563EB;
-    --c-blue-700: #1D4ED8;
-    --c-blue-800: #1E40AF;
+    /* ---------- Уровень 1: ПРИМИТИВЫ (HEX только тут) ---------- */
+    /* Бумага / чернила — светлая сторона */
+    --c-paper:      #FBFAF7;
+    --c-paper-2:    #F4F2EC;
+    --c-paper-3:    #EAE7DD;
+    --c-rule:       #D9D6CE;
+    --c-rule-soft:  #E7E4DB;
+    --c-ink:        #1C2230;
+    --c-ink-soft:   #5A6072;
 
-    --c-neutral-900: #0B1A24;
-    --c-neutral-800: #182E3D;
-    --c-neutral-700: #1E3A4D;
-    --c-neutral-600: #2A4A5E;
-    --c-neutral-500: #4E6A78; /* muted light — затемнён с #5B7A8C до AA ≥4.5 */
-    --c-neutral-400: #5B7A8C;
-    --c-neutral-300: #7DA9C0;
-    --c-neutral-200: #A8C7D8;
-    --c-white:       #FFFFFF;
+    /* Ночь / мел — тёмная сторона */
+    --c-night:      #15171E;
+    --c-night-2:    #1E212B;
+    --c-night-3:    #272B37;
+    --c-night-rule: #2E323E;
+    --c-night-rule-soft: #242833;
+    --c-chalk:      #ECEAE0;
+    --c-chalk-soft: #A7ABB8;
 
-    --c-green-600: #15803D;
-    --c-green-400: #4ADE80;
-    --c-amber-600: #B45309;
-    --c-amber-400: #FBBF24;
-    --c-red-600:   #DC2626;
-    --c-red-400:   #F87171;
+    /* Тил — музыкальный акцент */
+    --c-teal:        #1E6F66;  /* light: ссылки/аккорд/границы */
+    --c-teal-strong: #185C54;  /* light: фон CTA (white → ~6:1) */
+    --c-teal-deep:   #134A44;  /* light: CTA hover */
+    --c-teal-light:  #5FB8A8;  /* dark: ссылки/аккорд + фон CTA */
+    --c-teal-light-2:#7FCBBD;  /* dark: hover */
 
-    /* ---------- Уровень 2: СЕМАНТИКА (светлая тема по умолчанию) ---------- */
-    --color-bg:            var(--c-white);
-    --color-surface:       var(--c-sky-50);
-    --color-surface-2:     var(--c-sky-100);
-    --color-text:          var(--c-neutral-900);
-    --color-muted:         var(--c-neutral-500);
-    --color-border:        var(--c-sky-200);
-    --color-border-subtle: var(--c-sky-100);
+    /* Статусы (тёплые, обе темы) */
+    --c-success:      #1F7A52;  --c-success-d: #74D6A7;
+    --c-warning:      #9A6014;  --c-warning-d: #E8B25E;
+    --c-danger:       #B23A3A;  --c-danger-d:  #E98A8A;
 
-    --color-primary:              var(--c-sky-600);  /* акцент/аккорд/фокус/границы (UI ≥3:1) */
-    --color-primary-hover:        var(--c-sky-700);
-    --color-primary-strong:       var(--c-sky-700);  /* фон CTA-кнопки: white→5.9:1 */
-    --color-primary-strong-hover: var(--c-sky-800);
-    --color-primary-contrast:     var(--c-white);
+    --c-white: #FFFFFF;
 
-    --color-accent:          var(--c-blue-600);
-    --color-accent-hover:    var(--c-blue-700);
-    --color-accent-contrast: var(--c-white);         /* white на #2563EB → 5.17:1 */
+    /* ---------- Уровень 2: СЕМАНТИКА (light-dark = тема в один источник) ---------- */
+    --color-bg:            light-dark(var(--c-paper),    var(--c-night));
+    --color-surface:       light-dark(var(--c-paper-2),  var(--c-night-2));
+    --color-surface-2:     light-dark(var(--c-paper-3),  var(--c-night-3));
+    --color-text:          light-dark(var(--c-ink),      var(--c-chalk));
+    --color-muted:         light-dark(var(--c-ink-soft), var(--c-chalk-soft));
+    --color-border:        light-dark(var(--c-rule),     var(--c-night-rule));
+    --color-border-subtle: light-dark(var(--c-rule-soft),var(--c-night-rule-soft));
+
+    --color-primary:              light-dark(var(--c-teal),        var(--c-teal-light));
+    --color-primary-hover:        light-dark(var(--c-teal-strong), var(--c-teal-light-2));
+    --color-primary-strong:       light-dark(var(--c-teal-strong), var(--c-teal-light));   /* фон CTA */
+    --color-primary-strong-hover: light-dark(var(--c-teal-deep),   var(--c-teal-light-2));
+    --color-primary-contrast:     light-dark(var(--c-white),       var(--c-night));         /* текст на CTA */
+
+    --color-accent:          var(--color-primary);
+    --color-accent-hover:    var(--color-primary-hover);
+    --color-accent-contrast: var(--color-primary-contrast);
 
     --color-focus:   color-mix(in srgb, var(--color-primary) 55%, transparent);
 
-    --color-success: var(--c-green-600);
-    --color-warning: var(--c-amber-600);
-    --color-danger:  var(--c-red-600);
+    --color-success: light-dark(var(--c-success), var(--c-success-d));
+    --color-warning: light-dark(var(--c-warning), var(--c-warning-d));
+    --color-danger:  light-dark(var(--c-danger),  var(--c-danger-d));
     --color-danger-contrast: var(--c-white);
-    --color-info:    var(--c-sky-700);
+    --color-info:    var(--color-primary);
 
     /* ---------- Доменные токены (chord sheet / stage) ---------- */
-    --chord-color: var(--color-primary);
-    --chord-scale: 1;
-    --sheet-line-height: 2.4;
+    --chord-color:       var(--color-primary);
+    --chord-scale:       1;
+    --sheet-line-height: 1.9;   /* высота строки лид-шита (аккорд над слогом) */
 
-    /* ---------- Не-цветовые шкалы (имена сохранены) ---------- */
-    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", "Courier New", monospace;
+    /* ---------- Тени (цвет зависит от темы) ---------- */
+    --shadow-1: light-dark(rgba(28, 34, 48, 0.06), rgba(0, 0, 0, 0.45));
+    --shadow-2: light-dark(rgba(28, 34, 48, 0.10), rgba(0, 0, 0, 0.55));
+    --shadow-sm: 0 1px 2px var(--shadow-1);
+    --shadow-md: 0 8px 28px var(--shadow-2), 0 2px 8px var(--shadow-1);
 
+    /* ---------- Типографика ---------- */
+    --font-serif: "Lora", Georgia, "Times New Roman", serif;             /* титулы/бренд */
+    --font-sans:  "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono:  "IBM Plex Mono", ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+
+    /* ---------- Не-цветовые шкалы ---------- */
     --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
     --space-5: 1.5rem;  --space-6: 2rem;   --space-7: 3rem;    --space-8: 4rem;
 
@@ -89,83 +102,21 @@
     --fs-200: 0.9rem;
     --fs-300: 1rem;
     --fs-400: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
-    --fs-500: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
-    --fs-600: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
-    --fs-700: clamp(2rem, 1.5rem + 2vw, 3rem);
-    --lh-tight: 1.2;
+    --fs-500: clamp(1.3rem, 1.1rem + 0.8vw, 1.7rem);
+    --fs-600: clamp(1.7rem, 1.3rem + 1.6vw, 2.5rem);
+    --fs-700: clamp(2.2rem, 1.6rem + 2.6vw, 3.6rem);
+    --lh-tight: 1.15;
     --lh-base: 1.6;
 
     --radius-sm: 6px; --radius: 10px; --radius-lg: 16px; --radius-pill: 999px;
-    --shadow-sm: 0 1px 2px rgba(11, 26, 36, 0.06), 0 1px 1px rgba(11, 26, 36, 0.04);
-    --shadow-md: 0 6px 20px rgba(11, 26, 36, 0.08), 0 2px 6px rgba(11, 26, 36, 0.05);
     --container: 56rem;
+    --measure: 46rem;            /* комфортная мера чтения лид-шита */
+    --header-height: 3.75rem;
     --transition: 160ms ease;
     --z-header: 50;
     --z-sticky: 40;
 }
 
-/* ---------- Тёмная тема: явный выбор пользователя ---------- */
-:root[data-theme="dark"] {
-    --color-bg:            var(--c-neutral-900);
-    --color-surface:       var(--c-neutral-800);
-    --color-surface-2:     var(--c-neutral-700);
-    --color-text:          var(--c-sky-50);
-    --color-muted:         var(--c-neutral-300);
-    --color-border:        var(--c-neutral-700);
-    --color-border-subtle: var(--c-neutral-800);
-
-    --color-primary:              var(--c-sky-400);  /* осветлён под тёмный фон */
-    --color-primary-hover:        var(--c-sky-300);
-    --color-primary-strong:       var(--c-sky-400);  /* CTA: тёмный текст на светлом primary */
-    --color-primary-strong-hover: var(--c-sky-300);
-    --color-primary-contrast:     var(--c-neutral-900); /* тёмный, не белый */
-
-    --color-accent:          var(--c-blue-400);
-    --color-accent-hover:    var(--c-blue-300);
-    --color-accent-contrast: var(--c-neutral-900);
-
-    --color-focus:   color-mix(in srgb, var(--color-primary) 65%, transparent);
-
-    --color-success: var(--c-green-400);
-    --color-warning: var(--c-amber-400);
-    --color-danger:  var(--c-red-400);
-    --color-danger-contrast: var(--c-neutral-900);
-    --color-info:    var(--c-sky-300);
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
-
-/* ---------- Тёмная тема: системная, если выбор не сделан ---------- */
-@media (prefers-color-scheme: dark) {
-    :root:not([data-theme]) {
-        --color-bg:            var(--c-neutral-900);
-        --color-surface:       var(--c-neutral-800);
-        --color-surface-2:     var(--c-neutral-700);
-        --color-text:          var(--c-sky-50);
-        --color-muted:         var(--c-neutral-300);
-        --color-border:        var(--c-neutral-700);
-        --color-border-subtle: var(--c-neutral-800);
-
-        --color-primary:              var(--c-sky-400);
-        --color-primary-hover:        var(--c-sky-300);
-        --color-primary-strong:       var(--c-sky-400);
-        --color-primary-strong-hover: var(--c-sky-300);
-        --color-primary-contrast:     var(--c-neutral-900);
-
-        --color-accent:          var(--c-blue-400);
-        --color-accent-hover:    var(--c-blue-300);
-        --color-accent-contrast: var(--c-neutral-900);
-
-        --color-focus:   color-mix(in srgb, var(--color-primary) 65%, transparent);
-
-        --color-success: var(--c-green-400);
-        --color-warning: var(--c-amber-400);
-        --color-danger:  var(--c-red-400);
-        --color-danger-contrast: var(--c-neutral-900);
-        --color-info:    var(--c-sky-300);
-
-        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
-    }
-}
+/* Явный выбор пользователя переопределяет системную схему */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }

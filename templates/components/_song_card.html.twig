@@ -1,4 +1,4 @@
-{# Карточка песни в списке. Вход (явные пропсы): { song }.
+{# Карточка-строка песни в оглавлении. Вход (явные пропсы): { song }.
    song = { slug, title, artists_info, key_original } #}
 <a class="song-card" href="/songs/{{ song.slug }}">
     <div class="song-card__title">{{ song.title }}</div>
@@ -6,4 +6,5 @@
         {% if song.artists_info %}<span>{{ song.artists_info }}</span>{% endif %}
         {% if song.key_original %}<span class="chip">{{ song.key_original }}</span>{% endif %}
     </div>
+    <span class="song-card__chev" aria-hidden="true"></span>
 </a>
