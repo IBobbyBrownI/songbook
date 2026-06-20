@@ -4,6 +4,8 @@
 .DS_Store 
 .idea
 Thumbs.db
+.env.local
+.env.*.local
 
 # Twig cache
 /var/
