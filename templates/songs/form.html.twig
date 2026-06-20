@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% import 'components/_form_field.html.twig' as field %}
 {% import 'components/_licenses.html.twig' as licenses %}
+{% block active %}songs{% endblock %}
 
 {% block title %}
     {% if mode == 'edit' %}Редактировать — {{ song.title }}{% else %}Новая песня{% endif %} — Песенник
@@ -25,19 +26,23 @@
 
         <div class="form-field {% if errors.key_original %}form-field--invalid{% endif %}">
             <label for="key_original">Тональность</label>
-            <select id="key_original" name="key_original">
-                {% for key in keys %}
-                    <option value="{{ key }}" {% if song.key_original == key %}selected{% endif %}>{{ key }}</option>
-                {% endfor %}
-            </select>
+            <fancy-select>
+                <select id="key_original" name="key_original" aria-label="Тональность">
+                    {% for key in keys %}
+                        <option value="{{ key }}" {% if song.key_original == key %}selected{% endif %}>{{ key }}</option>
+                    {% endfor %}
+                </select>
+            </fancy-select>
             {% if errors.key_original %}<span class="form-error">{{ errors.key_original }}</span>{% endif %}
         </div>
 
         <div class="form-field {% if errors.license %}form-field--invalid{% endif %}">
             <label for="license">Лицензия</label>
-            <select id="license" name="license">
-                {{ licenses.options(song.license) }}
-            </select>
+            <fancy-select>
+                <select id="license" name="license" aria-label="Лицензия">
+                    {{ licenses.options(song.license) }}
+                </select>
+            </fancy-select>
             {% if errors.license %}<span class="form-error">{{ errors.license }}</span>{% endif %}
         </div>
 
@@ -55,12 +60,14 @@
                                 <span>{{ artist.name }}</span>
                             </label>
                             {% set sel_role = selected_artists[artist.id].role|default('performer') %}
-                            <select class="artist-picker__role" name="artists[{{ artist.id }}][role]" aria-label="Роль">
-                                <option value="author" {% if sel_role == 'author' %}selected{% endif %}>Автор</option>
-                                <option value="composer" {% if sel_role == 'composer' %}selected{% endif %}>Композитор</option>
-                                <option value="translator" {% if sel_role == 'translator' %}selected{% endif %}>Переводчик</option>
-                                <option value="performer" {% if sel_role == 'performer' %}selected{% endif %}>Исполнитель</option>
-                            </select>
+                            <fancy-select compact class="artist-picker__role">
+                                <select name="artists[{{ artist.id }}][role]" aria-label="Роль артиста {{ artist.name }}">
+                                    <option value="author" {% if sel_role == 'author' %}selected{% endif %}>Автор</option>
+                                    <option value="composer" {% if sel_role == 'composer' %}selected{% endif %}>Композитор</option>
+                                    <option value="translator" {% if sel_role == 'translator' %}selected{% endif %}>Переводчик</option>
+                                    <option value="performer" {% if sel_role == 'performer' %}selected{% endif %}>Исполнитель</option>
+                                </select>
+                            </fancy-select>
                         </div>
                     {% endfor %}
                 </div>

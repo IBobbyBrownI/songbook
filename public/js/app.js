@@ -7,3 +7,4 @@
 import './elements/theme-toggle.js';
 import './elements/song-transposer.js';
 import './elements/stage-reader.js';
+import './elements/fancy-select.js';

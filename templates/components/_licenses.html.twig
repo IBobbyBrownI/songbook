@@ -2,9 +2,9 @@
 
 {% macro label(key) %}
 {%- set map = {
+    'unknown': 'Не указана',
     'public_domain': 'Общественное достояние',
     'ugc': 'Пользовательский контент',
-    'unknown': 'Не указана',
     'restricted': 'Ограниченная'
 } -%}
 {{- map[key]|default(key) -}}

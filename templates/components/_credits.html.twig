@@ -1,11 +1,11 @@
 {# Credits песни. Вход (явные пропсы): { artists }.
    artists = [ { artist_slug, name, role } ] — контроллер отдаёт строку на роль.
-   Группируем по артисту, роли — через карту лейблов. #}
-{% set role_labels = { 'author': 'автор', 'composer': 'композитор', 'translator': 'переводчик', 'performer': 'исполнитель' } %}
+   Группируем по артисту, роли — через общий макрос _roles (единый источник). #}
+{% import 'components/_roles.html.twig' as roles %}
 {% set credits = {} %}
 {% for a in artists %}
     {% set row = credits[a.artist_slug] is defined ? credits[a.artist_slug] : { name: a.name, slug: a.artist_slug, roles: [] } %}
-    {% set row = row|merge({ roles: row.roles|merge([ role_labels[a.role]|default(a.role) ]) }) %}
+    {% set row = row|merge({ roles: row.roles|merge([ roles.label(a.role)|trim ]) }) %}
     {% set credits = credits|merge({ (a.artist_slug): row }) %}
 {% endfor %}
 {% if credits is not empty %}

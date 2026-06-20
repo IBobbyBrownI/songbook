@@ -8,6 +8,9 @@ import { LitElement, html } from 'lit';
 const SCALE_KEY = 'songbook-stage-scale';
 const MIN = 0.8, MAX = 2.4;
 
+const ICON_PLAY = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>`;
+const ICON_PAUSE = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>`;
+
 class StageReader extends LitElement {
     static properties = { scale: { state: true }, scrolling: { state: true } };
 
@@ -92,7 +95,7 @@ class StageReader extends LitElement {
                 <button class="btn btn--ghost btn--sm" @click=${() => this._bump(0.1)} aria-label="Больше шрифт">A+</button>
                 <button class="btn ${this.scrolling ? 'btn--primary' : 'btn--ghost'} btn--sm"
                         @click=${() => this._toggleScroll()} aria-pressed=${this.scrolling}>
-                    ${this.scrolling ? '⏸ Стоп' : '▶ Автоскролл'}
+                    ${this.scrolling ? ICON_PAUSE : ICON_PLAY}<span>${this.scrolling ? 'Стоп' : 'Автоскролл'}</span>
                 </button>
             </div>`;
     }

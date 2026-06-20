@@ -22,15 +22,29 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-h1, h2, h3 { line-height: var(--lh-tight); font-weight: 700; }
-h1 { font-size: var(--fs-600); }
-h2 { font-size: var(--fs-500); }
-h3 { font-size: var(--fs-400); }
+h1, h2, h3 {
+    font-family: var(--font-serif);
+    line-height: var(--lh-tight);
+    letter-spacing: -0.01em;
+}
+h1 { font-size: var(--fs-600); font-weight: 700; }
+h2 { font-size: var(--fs-500); font-weight: 500; }
+h3 { font-size: var(--fs-400); font-weight: 500; }
 
 p { line-height: var(--lh-base); }
 
 a { color: var(--color-primary); text-decoration: none; }
-a:hover { color: var(--color-primary-hover); text-decoration: underline; }
+a:hover { color: var(--color-primary-hover); text-decoration: underline; text-underline-offset: 0.18em; }
+
+/* Надстрочный «глаз»-лейбл (eyebrow / small-caps) — структурный маркер */
+.eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--fs-100);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+}
 
 img, picture, svg { max-width: 100%; display: block; }
 

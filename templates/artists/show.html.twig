@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_roles.html.twig' as roles %}
+{% block active %}artists{% endblock %}
 
 {% block title %}{{ artist.name }} — Песенник{% endblock %}
 
@@ -26,7 +28,7 @@
                 {% for song in songs %}
                     <li class="artist-list__row">
                         <a href="/songs/{{ song.slug }}">{{ song.title }}</a>
-                        <span class="chip">{{ song.role }}</span>
+                        <span class="chip">{{ roles.label(song.role)|trim }}</span>
                     </li>
                 {% endfor %}
             </ul>

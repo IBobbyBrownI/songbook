@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% import 'components/_form_field.html.twig' as field %}
+{% block active %}artists{% endblock %}
 
 {% block title %}
     {% if mode == 'edit' %}Редактировать артиста{% else %}Новый артист{% endif %} — Песенник
