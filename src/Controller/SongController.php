@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\ChordPro\Parser;
@@ -20,7 +22,7 @@ class SongController
         private ArtistRepository $artists,
         private Environment $twig,
         private Parser $parser,
-        private Renderer $renderer
+        private Renderer $renderer,
     ) {}
 
     public function list(Request $request): Response
@@ -246,7 +248,9 @@ class SongController
 
         $selectedCount = 0;
         foreach ($data['artists'] ?? [] as $artist) {
-            if (!empty($artist['id'])) $selectedCount++;
+            if (!empty($artist['id'])) {
+                $selectedCount++;
+            }
         }
         if ($selectedCount === 0) {
             $errors['artists'] = 'Выберите хотя бы одного артиста';

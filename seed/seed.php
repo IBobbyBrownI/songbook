@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use Symfony\Component\Dotenv\Dotenv;
@@ -13,16 +15,17 @@ $dsn = sprintf(
     "mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4",
     $_ENV["DB_HOST"],
     $_ENV["DB_PORT"],
-    $_ENV["DB_NAME"]
+    $_ENV["DB_NAME"],
 );
 
-$pdo = new PDO
-(   $dsn, $_ENV["DB_USER"],
+$pdo = new PDO(
+    $dsn,
+    $_ENV["DB_USER"],
     $_ENV["DB_PASSWORD"],
     [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-    ]
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ],
 );
 
 echo "Connected successfully";
@@ -54,8 +57,8 @@ $songs = [
         'first_lyrics_line' => 'Before I spoke a word, You were singing over me',
         'key_original' => 'A',
         'license' => 'public_domain',
-        'artists' =>
-            [
+        'artists'
+            => [
                 ['name' => 'Cory Asbury', 'role' => 'author'],
                 ['name' => 'Vladik Krivobrodski', 'role' => 'performer'],
             ],
@@ -67,8 +70,8 @@ $songs = [
         'first_lyrics_line' => 'You got thunder in Your vocal You got flames in Your eyes',
         'key_original' => 'C',
         'license' => 'ugc',
-        'artists' =>
-            [
+        'artists'
+            => [
                 ['name' => 'Brandon Lake', 'role' => 'author'],
                 ['name' => 'Vladik Krivobrodski', 'role' => 'performer'],
             ],
@@ -80,8 +83,8 @@ $songs = [
         'first_lyrics_line' => 'Amazing grace how sweet the sound',
         'key_original' => 'D',
         'license' => 'ugc',
-        'artists' =>
-            [
+        'artists'
+            => [
                 ['name' => 'Vladik Krivobrodski', 'role' => 'author'],
                 ['name' => 'Vladik Krivobrodski', 'role' => 'performer'],
             ],
@@ -93,8 +96,8 @@ $songs = [
         'first_lyrics_line' => 'The heavens praise God to You, endlessly repeating Praise',
         'key_original' => 'A',
         'license' => 'ugc',
-        'artists' =>
-            [
+        'artists'
+            => [
                 ['name' => 'Vladik Krivobrodski', 'role' => 'author'],
                 ['name' => 'Vladik Krivobrodski', 'role' => 'performer'],
             ],
@@ -106,8 +109,8 @@ $songs = [
         'first_lyrics_line' => 'Praise the Lord oh my soul',
         'key_original' => 'A',
         'license' => 'ugc',
-        'artists' =>
-            [
+        'artists'
+            => [
                 ['name' => 'Brandon Lake', 'role' => 'author'],
                 ['name' => 'Vladik Krivobrodski', 'role' => 'performer'],
             ],
@@ -115,7 +118,7 @@ $songs = [
 ];
 
 $songStmt = $pdo->prepare(
-    'INSERT INTO songs (title, slug, lyrics_chordpro, key_original, source, license, fingerprint, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())'
+    'INSERT INTO songs (title, slug, lyrics_chordpro, key_original, source, license, fingerprint, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())',
 );
 
 $songIds = [];

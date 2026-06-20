@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use PDO;
@@ -84,17 +86,19 @@ class SongRepository
 
             $stmt = $this->pdo->prepare(
                 'INSERT INTO songs (title, slug, lyrics_chordpro, key_original, source, license, fingerprint, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())'
+                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())',
             );
             $stmt->execute([
                 $data['title'], $data['slug'], $data['lyrics_chordpro'],
-                $data['key_original'], 'self', $data['license'], $data['fingerprint']
+                $data['key_original'], 'self', $data['license'], $data['fingerprint'],
             ]);
             $songId = $this->pdo->lastInsertId();
 
             $linkStmt = $this->pdo->prepare('INSERT INTO song_artists (song_id, artist_id, role) VALUES (?, ?, ?)');
             foreach ($artists as $artistId => $artist) {
-                if (empty($artist['id'])) continue;
+                if (empty($artist['id'])) {
+                    continue;
+                }
                 $linkStmt->execute([$songId, $artistId, $artist['role']]);
             }
 
@@ -112,19 +116,21 @@ class SongRepository
             $this->pdo->beginTransaction();
 
             $stmt = $this->pdo->prepare(
-                'UPDATE songs SET title = ?, lyrics_chordpro = ?, key_original = ?, license = ?, fingerprint = ?, updated_at = NOW() WHERE id = ?'
+                'UPDATE songs SET title = ?, lyrics_chordpro = ?, key_original = ?, license = ?, fingerprint = ?, updated_at = NOW() WHERE id = ?',
             );
             $stmt->execute([
                 $data['title'], $data['lyrics_chordpro'],
                 $data['key_original'], $data['license'], $data['fingerprint'],
-                $data['id']
+                $data['id'],
             ]);
 
             $this->pdo->prepare('DELETE FROM song_artists WHERE song_id = ?')->execute([$data['id']]);
 
             $linkStmt = $this->pdo->prepare('INSERT INTO song_artists (song_id, artist_id, role) VALUES (?, ?, ?)');
             foreach ($artists as $artistId => $artist) {
-                if (empty($artist['id'])) continue;
+                if (empty($artist['id'])) {
+                    continue;
+                }
                 $linkStmt->execute([$data['id'], $artistId, $artist['role']]);
             }
 

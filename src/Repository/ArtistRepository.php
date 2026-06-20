@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use PDO;
@@ -49,7 +51,7 @@ class ArtistRepository
     private function insert(array $data): string
     {
         $stmt = $this->pdo->prepare(
-            'INSERT INTO artists (name, slug, bio, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())'
+            'INSERT INTO artists (name, slug, bio, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())',
         );
         $stmt->execute([$data['name'], $data['slug'], $data['bio'] ?? '']);
         return $data['slug'];
@@ -58,7 +60,7 @@ class ArtistRepository
     private function update(array $data): string
     {
         $stmt = $this->pdo->prepare(
-            'UPDATE artists SET name = ?, bio = ?, updated_at = NOW() WHERE id = ?'
+            'UPDATE artists SET name = ?, bio = ?, updated_at = NOW() WHERE id = ?',
         );
         $stmt->execute([$data['name'], $data['bio'] ?? '', $data['id']]);
         return $data['slug'];
