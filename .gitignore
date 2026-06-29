@@ -6,6 +6,7 @@
 Thumbs.db
 .env.local
 .env.*.local
+.php-cs-fixer.cache
 
 # Twig cache
 /var/
