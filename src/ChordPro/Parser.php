@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ChordPro;
 
 class Parser
@@ -16,24 +18,20 @@ class Parser
         foreach ($lines as $line) {
             $trimmed = trim($line);
 
-            if ($trimmed === '')
-            {
+            if ($trimmed === '') {
                 $result['sections'][] = ['type' => 'blank'];
                 continue;
             }
 
-            if (preg_match('/^\{(\w+):\s*(.+)\}$/u', $trimmed, $matches))
-            {
+            if (preg_match('/^\{(\w+):\s*(.+)\}$/u', $trimmed, $matches)) {
                 $directive = $matches[1];
                 $value = $matches[2];
 
-                if($directive === 'title' || $directive === 'key')
-                {
+                if ($directive === 'title' || $directive === 'key') {
                     $result['metadata'][$directive] = $value;
-                } elseif ($directive === 'c')
-                    {
-                        $result['sections'][] = ['type' => 'comment', 'text' => $value];
-                    }
+                } elseif ($directive === 'c') {
+                    $result['sections'][] = ['type' => 'comment', 'text' => $value];
+                }
                 continue;
             }
 
@@ -42,16 +40,16 @@ class Parser
             $currentChord = null;
 
             foreach ($parts as $part) {
-                if ($part === '') continue;
+                if ($part === '') {
+                    continue;
+                }
 
-                if (preg_match('/^\[([^\]]+)\]$/u', $part, $m))
-                {
+                if (preg_match('/^\[([^\]]+)\]$/u', $part, $m)) {
                     $currentChord = $m[1];
-                } else
-                    {
-                        $lineParts[] = ['chord' => $currentChord, 'text' => $part];
-                        $currentChord = null;
-                    }
+                } else {
+                    $lineParts[] = ['chord' => $currentChord, 'text' => $part];
+                    $currentChord = null;
+                }
             }
 
             $result['sections'][] = ['type' => 'line', 'parts' => $lineParts];

@@ -1,26 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ChordPro;
 
 class Renderer
 {
-
     public function render(array $ast): string
     {
         $html = '';
 
-        foreach ($ast['sections'] as $line)
-        {
-            if ($line['type'] === 'blank')
-            {
+        foreach ($ast['sections'] as $line) {
+            if ($line['type'] === 'blank') {
                 $html .= '<div class="chordpro-blank"></div>';
-            }
-            elseif ($line['type'] === 'comment')
-            {
+            } elseif ($line['type'] === 'comment') {
                 $html .= '<div class="chordpro-comment">' . htmlspecialchars($line['text'], ENT_QUOTES, 'UTF-8') . '</div>';
-            }
-            elseif ($line['type'] === 'line')
-            {
+            } elseif ($line['type'] === 'line') {
                 $html .= '<div class="chordpro-line">';
 
                 foreach ($line['parts'] as $part) {
@@ -35,7 +30,7 @@ class Renderer
         }
 
 
-    return $html;
+        return $html;
     }
 
 }

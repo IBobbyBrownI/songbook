@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Repository\ArtistRepository;
@@ -13,7 +15,7 @@ class ArtistController
 {
     public function __construct(
         private ArtistRepository $artists,
-        private Environment $twig
+        private Environment $twig,
     ) {}
 
     public function list(Request $request): Response
@@ -139,7 +141,7 @@ class ArtistController
         if ($songsCount > 0) {
             return new Response(
                 'Нельзя удалить артиста «' . $artist['name'] . '»: у него ' . $songsCount . ' песен. Сначала отвяжите их.',
-                Response::HTTP_CONFLICT
+                Response::HTTP_CONFLICT,
             );
         }
 

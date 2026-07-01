@@ -1,10 +1,13 @@
-/vendor/ 
-.env
+/vendor/
 *.log
 .DS_Store 
 .idea
 Thumbs.db
+.env.local
+.env.*.local
+.php-cs-fixer.cache
 
 # Twig cache
 /var/
 .gstack/
+.idea/

@@ -2,11 +2,10 @@
 
 1. Как запустить с нуля
     * Клонировать репозиторий: "git clone https://github.com/IBobbyBrownI/songbook.git";
-    * Создать файл .env в корне, копировать содержимое .env.example, указать сови DB_USER и DB_PASSWORD;
-    * Запустить контейнеры: "docker compose up -d --build";
-    * Подождать пока MySQL полностью запустится (секунд 20 на всякий случай)
-    * Применить миграции: "for f in migrations/*.sql; do docker exec -i songbook-database-1 mysql -u root -psecret songbook < "$f"; done";
-    * Подключить seed для заполнения БД данными: "docker exec -it songbook-php-1 php seed/seed.php"
+    * Перейти в папку проекта: "cd songbook";
+    * Создать .env.local и указать свои DB_USER и DB_PASSWORD, если локальные настройки отличаются от dev-дефолтов в .env;
+    * Первый запуск: "make setup";
+    * Заполнить демо-данными: "make seed";
     * Открыть в браузере: localhost:8000.
 
 

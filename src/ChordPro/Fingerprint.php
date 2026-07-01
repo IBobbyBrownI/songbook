@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ChordPro;
 
 class Fingerprint
 {
-    public static function compute(string $title, string $lirycsChordPro, ?string $firstArtistName) :string
+    public static function compute(string $title, string $lirycsChordPro, ?string $firstArtistName): string
     {
 
         $firstArtistName = $firstArtistName ?? '';
