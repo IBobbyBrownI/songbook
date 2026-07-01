@@ -22,7 +22,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 $dotenv = new Dotenv();
-$dotenv->load(__DIR__ . "/../.env");
+$dotenv->loadEnv(__DIR__ . "/../.env");
 
 $dsn = sprintf(
     "mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4",
